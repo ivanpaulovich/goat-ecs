@@ -1,1 +1,1 @@
-add_library(goat goat.cpp)
+add_library(world world.cpp)
