@@ -1,27 +1,27 @@
 #include <gtest/gtest.h>
-#include "../src/world.h"
 #include <typeinfo>
 #include <iostream>
+#include "../src/world.h"
 
-struct Position: Component
+struct Position
 {
   int x;
   int y;
 };
 
-struct Velocity: Component
+struct Velocity
 {
   int x;
   int y;
 };
 
-struct Health: Component
+struct Health
 {
   int level;
 };
 
 // Demonstrate some basic assertions.
-TEST(HelloTest, BasicAssertions)
+TEST(WorldTest, EntityBuilding)
 {
   World *w = new World(10);
 
@@ -36,6 +36,11 @@ TEST(HelloTest, BasicAssertions)
   cout << "Health" << key4;
 
   unsigned int entityId = w->NewEntity();
+
+  Health health;
+  health.level = 3;
+
+  w->NewEntityBuilder()->With<Health>(health);
 
   Health* healths = w->GetComponents<Health>();
 
