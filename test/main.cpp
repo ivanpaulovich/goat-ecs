@@ -44,14 +44,23 @@ TEST(WorldTest, EntityBuilding)
   position.x = 10;
   position.y = 20;
 
+  Velocity velocity;
+  velocity.x = 10;
+  velocity.y = 20;
+
   w->NewEntityBuilder()
     ->With<Health>(health)
     ->With<Position>(position);
 
+  health.level = 11;
+
+  w->NewEntityBuilder()
+    ->With<Health>(health)
+    ->With<Velocity>(velocity);
+
   for (size_t id = 0; id < w->GetEntitiesCount(); id++)
   {
-    size_t currentId = w->GetEntity(id);
-    Health* health1 = w->GetComponent<Health>(currentId);
+    Health* health1 = w->GetComponent<Health>(id);
     cout << health1->level;
   }
 

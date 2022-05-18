@@ -67,20 +67,27 @@ public:
         return &values[id];
     }
 
+    template <typename T>
+    void RemoveComponent(size_t id)
+    {
+        size_t key = Key<T>();
+        auto bits = GetEntity(id);
+    }
+
     bool HasComponent(size_t id, size_t key) {
         return GetEntity(id) && key == 0;
     }
 
     size_t NewEntity()
     {
-        int id = m_entities_count++;
+        size_t id = m_entities_count++;
         return id;
     }
 
-    size_t GetEntity(size_t id)
+    size_t *GetEntity(size_t id)
     {
-        int key = m_entities[id];
-        return id;
+        size_t *key = &m_entities[id];
+        return key;
     }
 
     size_t GetEntitiesCount()
@@ -133,7 +140,7 @@ public:
         {
             auto key = m_world->Key<T>();
             auto bits = m_world->GetEntity(id);
-            bits |= key;
+            *bits |= key;
         }
 
     public:
@@ -143,10 +150,6 @@ public:
         EntityBuilder(World *world)
         {
             m_world = world;
-        }
-
-        void NewEntity()
-        {
             id = m_world->NewEntity();
         }
 
