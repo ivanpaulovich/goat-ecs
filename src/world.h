@@ -14,28 +14,28 @@
 
 class World;
 
-typedef void(TSystemUpdate)(World, unsigned int *);
+typedef void(TSystemUpdate)(World, size_t *);
 
 class World
 {
 private:
-    unsigned int m_size;
-    unsigned int m_entities_count;
-    unsigned int *m_entities;
-    unordered_map<TypeInfoRef, unsigned int, Hasher, EqualTo> m_keys;
-    map<unsigned int, void *> m_values;
-    map<Query, unsigned int *> m_indexes;
+    size_t m_size;
+    size_t m_entities_count;
+    size_t *m_entities;
+    unordered_map<TypeInfoRef, size_t, Hasher, EqualTo> m_keys;
+    map<size_t, void *> m_values;
+    map<Query, size_t *> m_indexes;
     vector<TSystemUpdate *> m_systems;
 
 public:
-    World(unsigned int size)
+    World(size_t size)
     {
         m_size = size;
-        m_entities = new unsigned int(size);
+        m_entities = new size_t(size);
     }
 
     template <typename T>
-    unsigned int Key()
+    size_t Key()
     {
         TypeInfoRef type = typeid(T);
         if (m_keys.find(type) != m_keys.end())
@@ -43,7 +43,7 @@ public:
             return m_keys[type];
         }
 
-        unsigned int key = 1 << m_keys.size();
+        size_t key = 1 << m_keys.size();
         m_keys[type] = key;
         T *components = new T[m_size];
         m_values[key] = components;
@@ -54,20 +54,38 @@ public:
     template <typename T>
     T *GetComponents()
     {
-        unsigned int key = Key<T>();
-        return (T *)(m_values[key]);
+        size_t key = Key<T>();
+        auto values = static_cast<T*>(m_values[key]);
+        return values;
     }
 
-    unsigned int NewEntity()
+    template <typename T>
+    T *GetComponent(size_t id)
+    {
+        size_t key = Key<T>();
+        auto values = static_cast<T*>(m_values[key]);
+        return &values[id];
+    }
+
+    bool HasComponent(size_t id, size_t key) {
+        return GetEntity(id) && key == 0;
+    }
+
+    size_t NewEntity()
     {
         int id = m_entities_count++;
         return id;
     }
 
-    unsigned int GetEntity(unsigned int id)
+    size_t GetEntity(size_t id)
     {
         int key = m_entities[id];
         return id;
+    }
+
+    size_t GetEntitiesCount()
+    {
+        return m_entities_count;
     }
 
     class QueryBuilder
@@ -106,8 +124,8 @@ public:
         template <typename T>
         void SetComponentValue(T value)
         {
-            auto components = m_world->GetComponents<T>();
-            components[id] = value;
+            auto components = m_world->GetComponent<T>(id);
+            *components = value;
         }
 
         template <typename T>
@@ -120,7 +138,7 @@ public:
 
     public:
         World *m_world;
-        unsigned int id;
+        size_t id;
 
         EntityBuilder(World *world)
         {

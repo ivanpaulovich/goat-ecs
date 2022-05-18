@@ -2,6 +2,6 @@
 
 struct Query
 {
-    unsigned int *include;
-    unsigned int *exclude;
+    size_t *include;
+    size_t *exclude;
 };

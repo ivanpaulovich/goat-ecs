@@ -35,20 +35,33 @@ TEST(WorldTest, EntityBuilding)
   cout << "Health" << key3;
   cout << "Health" << key4;
 
-  unsigned int entityId = w->NewEntity();
+  size_t entityId = w->NewEntity();
 
   Health health;
   health.level = 3;
 
-  w->NewEntityBuilder()->With<Health>(health);
+  Position position;
+  position.x = 10;
+  position.y = 20;
 
-  Health* healths = w->GetComponents<Health>();
+  w->NewEntityBuilder()
+    ->With<Health>(health)
+    ->With<Position>(position);
+
+  for (size_t id = 0; id < w->GetEntitiesCount(); id++)
+  {
+    size_t currentId = w->GetEntity(id);
+    Health* health1 = w->GetComponent<Health>(currentId);
+    cout << health1->level;
+  }
+
+  Health *healths = w->GetComponents<Health>();
 
   for (int i = 0; i < 5; i++)
   {
     cout << healths->level;
     healths++;
   }
-  
+
   EXPECT_EQ(1000, 1000);
 }
