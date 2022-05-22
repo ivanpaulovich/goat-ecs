@@ -20,9 +20,10 @@ struct Health
   int level;
 };
 
-void testUpdate(World* w, set<unsigned int> *index)
+void testUpdate(World *w, set<unsigned int> *index)
 {
-  for(const auto id : *index) {
+  for (const auto id : *index)
+  {
     auto *health = w->GetComponent<Health>(id);
     cout << health->level;
   }
@@ -34,7 +35,7 @@ TEST(WorldTest, EntityBuilding)
   World *w = new World(10);
 
   unsigned int entityId = w->NewEntityBuilder()
-      ->GetId();
+                              ->GetId();
 
   Health health;
   health.level = 3;
@@ -48,21 +49,21 @@ TEST(WorldTest, EntityBuilding)
   velocity.y = 20;
 
   int entityId1 = w->NewEntityBuilder()
-      ->With<Health>(health)
-      ->With<Position>(position)
-      ->GetId();
+                      ->With<Health>(health)
+                      ->With<Position>(position)
+                      ->GetId();
 
   health.level = 11;
 
   int entityId2 = w->NewEntityBuilder()
-      ->With<Health>(health)
-      ->With<Velocity>(velocity)
-      ->GetId();
+                      ->With<Health>(health)
+                      ->With<Velocity>(velocity)
+                      ->GetId();
 
-  Query *query1 = w->NewQueryBuilder()
-      ->Include<Health>()
-      ->Ready()
-      ->GetQuery();
+  unsigned int query = w->NewQueryBuilder()
+                           ->Include<Health>()
+                           ->Ready()
+                           ->GetQuery();
 
   for (unsigned int id = 0; id < w->GetEntitiesCount(); id++)
   {
@@ -70,9 +71,15 @@ TEST(WorldTest, EntityBuilding)
     cout << health1->level;
   }
 
-  w->Index();
+  auto index1 = w->GetIndex(query);
 
-  w->Update(query1, &testUpdate);
+  testUpdate(w, &index1);
 
-  EXPECT_EQ(1000, 1000);
+  w->RemoveComponent<Health>(entityId1);
+
+  auto index2 = w->GetIndex(query);
+
+  testUpdate(w, &index2);
+
+  EXPECT_EQ(3, w->GetEntitiesCount());
 }

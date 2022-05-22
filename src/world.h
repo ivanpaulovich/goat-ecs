@@ -15,7 +15,7 @@
 
 class World;
 
-typedef void(TSystemUpdate)(World*, set<unsigned int> *index);
+typedef void(TSystemUpdate)(World *, const set<unsigned int> *index);
 
 class World
 {
@@ -27,29 +27,6 @@ private:
     map<unsigned int, void *> m_values;
     map<unsigned int, set<unsigned int>> m_indexes;
     vector<TSystemUpdate *> m_systems;
-
-    unsigned int NewEntity()
-    {
-        unsigned int id = m_entities_count++;
-        return id;
-    }
-
-    void AddQuery(const unsigned int query)
-    {
-        set<unsigned int> index;
-        m_indexes[query] = index;
-    }
-
-    bool IsEntityInQuery(unsigned int id, unsigned int query) {
-        return (m_entities[id] & query) == query;
-    }
-
-public:
-    World(unsigned int size)
-    {
-        m_size = size;
-        m_entities = new unsigned int(size);
-    }
 
     template <typename T>
     unsigned int Key()
@@ -68,29 +45,121 @@ public:
         return key;
     }
 
+    unsigned int NewEntity()
+    {
+        unsigned int id = m_entities_count++;
+        return id;
+    }
+
+    void AddQuery(const unsigned int query)
+    {
+        set<unsigned int> index;
+        m_indexes[query] = index;
+        UpdateQueryIndex(query);
+    }
+
+    bool IsEntityInQuery(const unsigned int id, const unsigned int query)
+    {
+        return (m_entities[id] & query) == query;
+    }
+
+    void UpdateQueryIndex(const unsigned int query)
+    {
+        for (unsigned int id = 0; id < GetEntitiesCount(); id++)
+        {
+            if (IsEntityInQuery(id, query))
+            {
+                AddEntityToIndex(id, query);
+            }
+        }
+    }
+
+    void UpdateEntityIndex(const unsigned int id)
+    {
+        for (auto pair : m_indexes)
+        {
+            if (IsEntityInQuery(id, pair.first))
+            {
+                AddEntityToIndex(id, pair.first);
+                continue;
+            }
+
+            RemoveEntityFromIndex(id, pair.first);
+        }
+    }
+
+    void AddEntityToIndex(const unsigned int id, const unsigned int query)
+    {
+        if (m_indexes.find(query) != m_indexes.end())
+        {
+            m_indexes[query].insert(id);
+            return;
+        }
+
+        set<unsigned int> index;
+        index.insert(id);
+        m_indexes[query] = index;
+    }
+
+    void RemoveEntityFromIndex(const unsigned int id, const unsigned int query)
+    {
+        if (m_indexes.find(query) != m_indexes.end())
+        {
+            m_indexes[query].erase(id);
+            return;
+        }
+    }
+
+public:
+    World(const unsigned int size)
+    {
+        m_size = size;
+        m_entities = new unsigned int(size);
+    }
+
     template <typename T>
-    T *GetComponent(unsigned int id)
+    void SetComponent(const unsigned int id, const T value)
+    {
+        auto components = GetComponent<T>(id);
+        *components = value;
+
+        UpdateEntityIndex(id);
+    }
+
+    template <typename T>
+    void SetComponent(const unsigned int id)
+    {
+        auto key = Key<T>();
+        auto bits = GetEntity(id);
+        *bits |= key;
+
+        UpdateEntityIndex(id);
+    }
+
+    template <typename T>
+    T *GetComponent(const unsigned int id)
     {
         unsigned int key = Key<T>();
-        auto values = static_cast<T*>(m_values[key]);
+        auto values = static_cast<T *>(m_values[key]);
         return &values[id];
     }
 
     template <typename T>
-    void RemoveComponent(unsigned int id)
+    void RemoveComponent(const unsigned int id)
     {
         unsigned int key = Key<T>();
         auto bits = GetEntity(id);
         *bits ^= key;
+
+        UpdateEntityIndex(id);
     }
 
-    bool HasComponent(unsigned int id, unsigned int key) {
+    bool HasComponent(const unsigned int id, const unsigned int key)
+    {
         return GetEntity(id) && key == 0;
     }
 
-
-
-    unsigned int *GetEntity(unsigned int id)
+    unsigned int *GetEntity(const unsigned int id)
     {
         unsigned int *key = &m_entities[id];
         return key;
@@ -101,25 +170,9 @@ public:
         return m_entities_count;
     }
 
-    void Update(Query *query, TSystemUpdate update)
+    set<unsigned int> GetIndex(const unsigned int query)
     {
-        auto index = m_indexes[query->include];
-        update(this, &index);
-    }
-
-    void Index()
-    {
-        for (unsigned int id = 0; id < GetEntitiesCount(); id++)
-        {
-            for (auto itr = m_indexes.begin(); 
-                itr != m_indexes.end(); itr++) 
-            {
-                if (IsEntityInQuery(id, itr->first))
-                {
-                    itr->second.insert(id);
-                }
-            }
-        }
+        return m_indexes[query];
     }
 
     class QueryBuilder;
@@ -132,10 +185,10 @@ public:
 
     class QueryBuilder
     {
-    public:
+    private:
         World *m_world;
         Query *m_query;
-
+    public:
         QueryBuilder(World *world)
         {
             m_world = world;
@@ -156,9 +209,9 @@ public:
             return this;
         }
 
-        Query *GetQuery()
+        unsigned int GetQuery()
         {
-            return m_query;
+            return m_query->include;
         }
     };
 
@@ -172,26 +225,9 @@ public:
 
     class EntityBuilder
     {
-    private:
-        template <typename T>
-        void SetComponentValue(T value)
-        {
-            auto components = m_world->GetComponent<T>(id);
-            *components = value;
-        }
-
-        template <typename T>
-        void SetComponentKey()
-        {
-            auto key = m_world->Key<T>();
-            auto bits = m_world->GetEntity(id);
-            *bits |= key;
-        }
-
-    public:
         World *m_world;
         unsigned int id;
-
+    public:
         EntityBuilder(World *world)
         {
             m_world = world;
@@ -199,10 +235,10 @@ public:
         }
 
         template <typename T>
-        EntityBuilder *With(T value)
+        EntityBuilder *With(const T value)
         {
-            SetComponentKey<T>();
-            SetComponentValue<T>(value);
+            m_world->SetComponent<T>(id);
+            m_world->SetComponent<T>(id, value);
 
             return this;
         }
@@ -210,7 +246,7 @@ public:
         template <typename T>
         EntityBuilder *With()
         {
-            SetComponentKey<T>();
+            m_world->SetComponent<T>(id);
 
             return this;
         }
