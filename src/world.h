@@ -17,6 +17,14 @@ class World;
 
 typedef void(TSystemUpdate)(World *, const set<unsigned int> *index);
 
+class SystemConfig
+{
+public:
+    TSystemUpdate update;
+    unsigned int priority;
+    set<unsigned int> *index;
+};
+
 class World
 {
 private:
@@ -173,6 +181,18 @@ public:
     set<unsigned int> GetIndex(const unsigned int query)
     {
         return m_indexes[query];
+    }
+
+    void AddSystem(TSystemUpdate update)
+    {
+        m_systems.push_back(update);
+    }
+
+    void Update()
+    {
+        for(auto update : m_systems) {
+
+        }
     }
 
     class QueryBuilder;

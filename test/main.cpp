@@ -20,7 +20,7 @@ struct Health
   int level;
 };
 
-void testUpdate(World *w, set<unsigned int> *index)
+void testUpdate(World *w, const set<unsigned int> *index)
 {
   for (const auto id : *index)
   {
@@ -47,6 +47,8 @@ TEST(WorldTest, EntityBuilding)
   Velocity velocity;
   velocity.x = 10;
   velocity.y = 20;
+
+  w->AddSystem(&testUpdate);
 
   int entityId1 = w->NewEntityBuilder()
                       ->With<Health>(health)
