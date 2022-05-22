@@ -1,7 +1,16 @@
 #pragma once
 
-struct Query
+class Query
 {
-    size_t *include;
-    size_t *exclude;
+public:
+    unsigned int include;
+
+    Query() {
+        include = 0;
+    }
+
+    void Include(unsigned int key)
+    {
+        include |= key;
+    }
 };

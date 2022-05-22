@@ -20,22 +20,21 @@ struct Health
   int level;
 };
 
+void testUpdate(World* w, set<unsigned int> *index)
+{
+  for(const auto id : *index) {
+    auto *health = w->GetComponent<Health>(id);
+    cout << health->level;
+  }
+}
+
 // Demonstrate some basic assertions.
 TEST(WorldTest, EntityBuilding)
 {
   World *w = new World(10);
 
-  int key1 = w->Key<Position>();
-  int key2 = w->Key<Velocity>();
-  int key3 = w->Key<Health>();
-  int key4 = w->Key<Health>();
-
-  cout << "Position" << key1;
-  cout << "Velocity" << key2;
-  cout << "Health" << key3;
-  cout << "Health" << key4;
-
-  size_t entityId = w->NewEntity();
+  unsigned int entityId = w->NewEntityBuilder()
+      ->GetId();
 
   Health health;
   health.level = 3;
@@ -48,29 +47,32 @@ TEST(WorldTest, EntityBuilding)
   velocity.x = 10;
   velocity.y = 20;
 
-  w->NewEntityBuilder()
-    ->With<Health>(health)
-    ->With<Position>(position);
+  int entityId1 = w->NewEntityBuilder()
+      ->With<Health>(health)
+      ->With<Position>(position)
+      ->GetId();
 
   health.level = 11;
 
-  w->NewEntityBuilder()
-    ->With<Health>(health)
-    ->With<Velocity>(velocity);
+  int entityId2 = w->NewEntityBuilder()
+      ->With<Health>(health)
+      ->With<Velocity>(velocity)
+      ->GetId();
 
-  for (size_t id = 0; id < w->GetEntitiesCount(); id++)
+  Query *query1 = w->NewQueryBuilder()
+      ->Include<Health>()
+      ->Ready()
+      ->GetQuery();
+
+  for (unsigned int id = 0; id < w->GetEntitiesCount(); id++)
   {
-    Health* health1 = w->GetComponent<Health>(id);
+    Health *health1 = w->GetComponent<Health>(id);
     cout << health1->level;
   }
 
-  Health *healths = w->GetComponents<Health>();
+  w->Index();
 
-  for (int i = 0; i < 5; i++)
-  {
-    cout << healths->level;
-    healths++;
-  }
+  w->Update(query1, &testUpdate);
 
   EXPECT_EQ(1000, 1000);
 }

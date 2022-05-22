@@ -9,33 +9,50 @@
 #include <string>
 #include <functional>
 #include <memory>
+#include <set>
 #include "query.h"
 #include "typeInfoRef.h"
 
 class World;
 
-typedef void(TSystemUpdate)(World, size_t *);
+typedef void(TSystemUpdate)(World*, set<unsigned int> *index);
 
 class World
 {
 private:
-    size_t m_size;
-    size_t m_entities_count;
-    size_t *m_entities;
-    unordered_map<TypeInfoRef, size_t, Hasher, EqualTo> m_keys;
-    map<size_t, void *> m_values;
-    map<Query, size_t *> m_indexes;
+    unsigned int m_size;
+    unsigned int m_entities_count;
+    unsigned int *m_entities;
+    unordered_map<TypeInfoRef, unsigned int, Hasher, EqualTo> m_keys;
+    map<unsigned int, void *> m_values;
+    map<unsigned int, set<unsigned int>> m_indexes;
     vector<TSystemUpdate *> m_systems;
 
+    unsigned int NewEntity()
+    {
+        unsigned int id = m_entities_count++;
+        return id;
+    }
+
+    void AddQuery(const unsigned int query)
+    {
+        set<unsigned int> index;
+        m_indexes[query] = index;
+    }
+
+    bool IsEntityInQuery(unsigned int id, unsigned int query) {
+        return (m_entities[id] & query) == query;
+    }
+
 public:
-    World(size_t size)
+    World(unsigned int size)
     {
         m_size = size;
-        m_entities = new size_t(size);
+        m_entities = new unsigned int(size);
     }
 
     template <typename T>
-    size_t Key()
+    unsigned int Key()
     {
         TypeInfoRef type = typeid(T);
         if (m_keys.find(type) != m_keys.end())
@@ -43,7 +60,7 @@ public:
             return m_keys[type];
         }
 
-        size_t key = 1 << m_keys.size();
+        unsigned int key = 1 << m_keys.size();
         m_keys[type] = key;
         T *components = new T[m_size];
         m_values[key] = components;
@@ -52,68 +69,96 @@ public:
     }
 
     template <typename T>
-    T *GetComponents()
+    T *GetComponent(unsigned int id)
     {
-        size_t key = Key<T>();
-        auto values = static_cast<T*>(m_values[key]);
-        return values;
-    }
-
-    template <typename T>
-    T *GetComponent(size_t id)
-    {
-        size_t key = Key<T>();
+        unsigned int key = Key<T>();
         auto values = static_cast<T*>(m_values[key]);
         return &values[id];
     }
 
     template <typename T>
-    void RemoveComponent(size_t id)
+    void RemoveComponent(unsigned int id)
     {
-        size_t key = Key<T>();
+        unsigned int key = Key<T>();
         auto bits = GetEntity(id);
+        *bits ^= key;
     }
 
-    bool HasComponent(size_t id, size_t key) {
+    bool HasComponent(unsigned int id, unsigned int key) {
         return GetEntity(id) && key == 0;
     }
 
-    size_t NewEntity()
-    {
-        size_t id = m_entities_count++;
-        return id;
-    }
 
-    size_t *GetEntity(size_t id)
+
+    unsigned int *GetEntity(unsigned int id)
     {
-        size_t *key = &m_entities[id];
+        unsigned int *key = &m_entities[id];
         return key;
     }
 
-    size_t GetEntitiesCount()
+    unsigned int GetEntitiesCount()
     {
         return m_entities_count;
+    }
+
+    void Update(Query *query, TSystemUpdate update)
+    {
+        auto index = m_indexes[query->include];
+        update(this, &index);
+    }
+
+    void Index()
+    {
+        for (unsigned int id = 0; id < GetEntitiesCount(); id++)
+        {
+            for (auto itr = m_indexes.begin(); 
+                itr != m_indexes.end(); itr++) 
+            {
+                if (IsEntityInQuery(id, itr->first))
+                {
+                    itr->second.insert(id);
+                }
+            }
+        }
+    }
+
+    class QueryBuilder;
+
+    QueryBuilder *NewQueryBuilder()
+    {
+        auto queryBuilder = new World::QueryBuilder(this);
+        return queryBuilder;
     }
 
     class QueryBuilder
     {
     public:
         World *m_world;
-        Query m_query;
+        Query *m_query;
 
         QueryBuilder(World *world)
         {
             m_world = world;
+            m_query = new Query();
         }
 
-        QueryBuilder *Include(const TypeInfoRef *types)
+        template <typename T>
+        QueryBuilder *Include()
         {
+            auto key = m_world->Key<T>();
+            m_query->Include(key);
             return this;
         }
 
-        QueryBuilder *Exclude(const TypeInfoRef *types)
+        QueryBuilder *Ready()
         {
+            m_world->AddQuery(m_query->include);
             return this;
+        }
+
+        Query *GetQuery()
+        {
+            return m_query;
         }
     };
 
@@ -145,7 +190,7 @@ public:
 
     public:
         World *m_world;
-        size_t id;
+        unsigned int id;
 
         EntityBuilder(World *world)
         {
@@ -168,6 +213,11 @@ public:
             SetComponentKey<T>();
 
             return this;
+        }
+
+        int GetId()
+        {
+            return id;
         }
     };
 };

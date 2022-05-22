@@ -9,7 +9,7 @@ using TypeInfoRef = reference_wrapper<const type_info>;
 
 struct Hasher
 {
-    size_t operator()(TypeInfoRef code) const
+    unsigned int operator()(TypeInfoRef code) const
     {
         return code.get().hash_code();
     }
