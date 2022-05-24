@@ -25,6 +25,63 @@ public:
     set<unsigned int> *index;
 };
 
+class Index
+{
+private:
+    map<unsigned int, set<unsigned int>> m_indexes;
+
+    bool IsEntitySignatureInQuery(const unsigned int signature, const unsigned int query)
+    {
+        return (signature & query) == query;
+    }
+
+    void AddEntityToIndex(const unsigned int id, const unsigned int query)
+    {
+        m_indexes[query].insert(id);
+    }
+
+    void RemoveEntityFromIndex(const unsigned int id, const unsigned int query)
+    {
+        m_indexes[query].erase(id);
+    }
+
+    void InsertOrRemoveEntityFromIndex(const unsigned int id, const unsigned int signature, const unsigned int query)
+    {
+        if (IsEntitySignatureInQuery(signature, query))
+        {
+            AddEntityToIndex(id, query);
+            return;
+        }
+
+        RemoveEntityFromIndex(id, query);
+    }
+
+public:
+    void AddQuery(const unsigned int query)
+    {
+        set<unsigned int> index;
+        m_indexes[query] = index;
+    }
+
+    void RemoveQuery(const unsigned int query)
+    {
+        m_indexes.erase(query);
+    }
+
+    set<unsigned int> GetIndex(const unsigned int query)
+    {
+        return m_indexes[query];
+    }
+
+    void UpdateEntityIndex(const unsigned int id, const unsigned int signature)
+    {
+        for (auto pair : m_indexes)
+        {
+            InsertOrRemoveEntityFromIndex(id, signature, pair.first);
+        }
+    }
+};
+
 class World
 {
 private:
@@ -33,7 +90,7 @@ private:
     unsigned int *m_entities;
     unordered_map<TypeInfoRef, unsigned int, Hasher, EqualTo> m_keys;
     map<unsigned int, void *> m_values;
-    map<unsigned int, set<unsigned int>> m_indexes;
+    Index m_index;
     vector<TSystemUpdate *> m_systems;
 
     template <typename T>
@@ -61,60 +118,11 @@ private:
 
     void AddQuery(const unsigned int query)
     {
-        set<unsigned int> index;
-        m_indexes[query] = index;
-        UpdateQueryIndex(query);
-    }
+        m_index.AddQuery(query);
 
-    bool IsEntityInQuery(const unsigned int id, const unsigned int query)
-    {
-        return (m_entities[id] & query) == query;
-    }
-
-    void UpdateQueryIndex(const unsigned int query)
-    {
         for (unsigned int id = 0; id < GetEntitiesCount(); id++)
         {
-            if (IsEntityInQuery(id, query))
-            {
-                AddEntityToIndex(id, query);
-            }
-        }
-    }
-
-    void UpdateEntityIndex(const unsigned int id)
-    {
-        for (auto pair : m_indexes)
-        {
-            if (IsEntityInQuery(id, pair.first))
-            {
-                AddEntityToIndex(id, pair.first);
-                continue;
-            }
-
-            RemoveEntityFromIndex(id, pair.first);
-        }
-    }
-
-    void AddEntityToIndex(const unsigned int id, const unsigned int query)
-    {
-        if (m_indexes.find(query) != m_indexes.end())
-        {
-            m_indexes[query].insert(id);
-            return;
-        }
-
-        set<unsigned int> index;
-        index.insert(id);
-        m_indexes[query] = index;
-    }
-
-    void RemoveEntityFromIndex(const unsigned int id, const unsigned int query)
-    {
-        if (m_indexes.find(query) != m_indexes.end())
-        {
-            m_indexes[query].erase(id);
-            return;
+            m_index.UpdateEntityIndex(id, m_entities[id]);
         }
     }
 
@@ -131,7 +139,7 @@ public:
         auto components = GetComponent<T>(id);
         *components = value;
 
-        UpdateEntityIndex(id);
+        m_index.UpdateEntityIndex(id, m_entities[id]);
     }
 
     template <typename T>
@@ -141,7 +149,7 @@ public:
         auto bits = GetEntity(id);
         *bits |= key;
 
-        UpdateEntityIndex(id);
+        m_index.UpdateEntityIndex(id, m_entities[id]);
     }
 
     template <typename T>
@@ -159,7 +167,7 @@ public:
         auto bits = GetEntity(id);
         *bits ^= key;
 
-        UpdateEntityIndex(id);
+        m_index.UpdateEntityIndex(id, m_entities[id]);
     }
 
     bool HasComponent(const unsigned int id, const unsigned int key)
@@ -180,7 +188,7 @@ public:
 
     set<unsigned int> GetIndex(const unsigned int query)
     {
-        return m_indexes[query];
+        return m_index.GetIndex(query);
     }
 
     void AddSystem(TSystemUpdate update)

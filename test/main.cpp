@@ -73,7 +73,11 @@ TEST(WorldTest, EntityBuilding)
     cout << health1->level;
   }
 
+  EXPECT_EQ(3, w->GetEntitiesCount());
+
   auto index1 = w->GetIndex(query);
+
+  // EXPECT_EQ(3, index1.count());
 
   testUpdate(w, &index1);
 
@@ -83,5 +87,5 @@ TEST(WorldTest, EntityBuilding)
 
   testUpdate(w, &index2);
 
-  EXPECT_EQ(3, w->GetEntitiesCount());
+  // EXPECT_EQ(2, index1.count());
 }
