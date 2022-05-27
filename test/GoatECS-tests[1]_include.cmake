@@ -1,0 +1,5 @@
+if(EXISTS "/Users/ivanpaulovich/git/goat/test/GoatECS-tests[1]_tests.cmake")
+  include("/Users/ivanpaulovich/git/goat/test/GoatECS-tests[1]_tests.cmake")
+else()
+  add_test(GoatECS-tests_NOT_BUILT GoatECS-tests_NOT_BUILT)
+endif()

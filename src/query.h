@@ -2,15 +2,13 @@
 
 class Query
 {
-public:
+private:
     unsigned int include;
 
-    Query() {
-        include = 0;
-    }
+public:
+    Query();
 
-    void Include(unsigned int key)
-    {
-        include |= key;
-    }
+    void Include(unsigned int key);
+
+    unsigned int GetInclude();
 };

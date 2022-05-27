@@ -1,7 +1,11 @@
 #include <gtest/gtest.h>
 #include <typeinfo>
 #include <iostream>
-#include "../src/world.h"
+#include <set>
+#include <world.h>
+#include <component.h>
+#include <entities.h>
+#include <components.h>
 
 struct Position
 {
@@ -17,75 +21,199 @@ struct Velocity
 
 struct Health
 {
-  int level;
+  float level;
 };
 
-void testUpdate(World *w, const set<unsigned int> *index)
-{
-  for (const auto id : *index)
-  {
-    auto *health = w->GetComponent<Health>(id);
-    cout << health->level;
-  }
-}
+// class Component1
+// {
+// private:
+//     void *m_values;
+// public:
+//   template <typename T>
+//   void Init(const unsigned int size)
+//   {
+//       m_values = new T[size];
+//   }
 
-// Demonstrate some basic assertions.
+//   template <typename T>
+//   T *GetValues()
+//   {
+//       return static_cast<T *>(m_values);
+//   }
+// };
+
+const unsigned int WORLD_SIZE = 10;
+
 TEST(WorldTest, EntityBuilding)
 {
-  World *w = new World(10);
-
-  unsigned int entityId = w->NewEntityBuilder()
-                              ->GetId();
-
-  Health health;
-  health.level = 3;
-
-  Position position;
-  position.x = 10;
-  position.y = 20;
-
-  Velocity velocity;
-  velocity.x = 10;
-  velocity.y = 20;
-
-  w->AddSystem(&testUpdate);
-
-  int entityId1 = w->NewEntityBuilder()
-                      ->With<Health>(health)
-                      ->With<Position>(position)
-                      ->GetId();
-
-  health.level = 11;
-
-  int entityId2 = w->NewEntityBuilder()
-                      ->With<Health>(health)
-                      ->With<Velocity>(velocity)
-                      ->GetId();
-
-  unsigned int query = w->NewQueryBuilder()
-                           ->Include<Health>()
-                           ->Ready()
-                           ->GetQuery();
-
-  for (unsigned int id = 0; id < w->GetEntitiesCount(); id++)
-  {
-    Health *health1 = w->GetComponent<Health>(id);
-    cout << health1->level;
-  }
-
-  EXPECT_EQ(3, w->GetEntitiesCount());
-
-  auto index1 = w->GetIndex(query);
-
-  // EXPECT_EQ(3, index1.count());
-
-  testUpdate(w, &index1);
-
-  w->RemoveComponent<Health>(entityId1);
-
-  auto index2 = w->GetIndex(query);
-
-  testUpdate(w, &index2);
-
-  // EXPECT_EQ(2, index1.count());
+  Entities entities = Entities(WORLD_SIZE);
+  unsigned int id = entities.NewEntity();
+  Component component;
+  component.Init<Position>(WORLD_SIZE);
+  Position *c = component.GetValues<Position>();
 }
+
+TEST(WorldTest, ComponentBuilding)
+{
+  Component component;
+  component.Init<Position>(WORLD_SIZE);
+  Position *positions = component.GetValues<Position>();
+}
+
+// TEST(WorldTest, ComponentsBuilding)
+// {
+//   const unsigned int POSITION_KEY = 0;
+//   const unsigned int POSITION_SIZE = 10;
+//   const unsigned int POSITION_ELEMENT_ID = 0;
+
+//   Components components;
+//   components.Key<Position>(POSITION_KEY, POSITION_SIZE);
+
+//   Position *pos1 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
+
+//   EXPECT_EQ(0, pos1->x);
+//   EXPECT_EQ(0, pos1->y);
+
+//   pos1->x = 10;
+//   pos1->y = 20;
+
+//   Position *pos2 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
+
+//   EXPECT_EQ(10, pos2->x);
+//   EXPECT_EQ(20, pos2->y);
+// }
+
+// TEST(WorldTest, EntityInstantiation)
+// {
+//   const unsigned int ENTITIES_SIZE = 10;
+
+//   Entities entities = Entities(ENTITIES_SIZE);
+//   unsigned int entityId = entities.NewEntity();
+
+//   EXPECT_EQ(ENTITIES_SIZE, entities.GetSize());
+//   EXPECT_EQ(1, entities.GetCount());
+// }
+
+// TEST(WorldTest, WorldBuilding)
+// {
+//   const unsigned int ENTITIES_SIZE = 10;
+
+//   World w = World(ENTITIES_SIZE);
+
+//   Health health;
+//   health.level = 100.0f;
+
+//   Position position;
+//   position.x = 10;
+//   position.y = 20;
+
+//   Velocity velocity;
+//   velocity.x = 2;
+//   velocity.y = 4;
+
+//   w.NewEntityBuilder()
+//       ->With<Health>(health)
+//       ->With<Position>(position);
+
+//   w.NewEntityBuilder()
+//       ->With<Health>(health)
+//       ->With<Position>(position)
+//       ->With<Velocity>(velocity);
+
+//   w.NewEntityBuilder()
+//       ->With<Position>(position)
+//       ->With<Velocity>(velocity);
+
+//   auto queryHealth = w.NewQueryBuilder()
+//       ->Include<Health>()
+//       ->Ready()
+//       ->GetQuery();
+
+//   auto queryPosVel = w.NewQueryBuilder()
+//       ->Include<Position>()
+//       ->Include<Velocity>()
+//       ->Ready()
+//       ->GetQuery();
+
+//   auto queryPos = w.NewQueryBuilder()
+//       ->Include<Position>()
+//       ->Ready()
+//       ->GetQuery();
+
+//   auto healthObjects = w.GetIndex(queryHealth);
+//   auto posVelObjects = w.GetIndex(queryPosVel);
+//   auto posObjects = w.GetIndex(queryPos);
+
+//   // EXPECT_EQ(2, healthObjects.count());
+//   // EXPECT_EQ(2, posVelObjects.count());
+//   // EXPECT_EQ(1, posObjects.count());
+// }
+
+// void testUpdate(World *w, const set<unsigned int> *index)
+// {
+//   for (const auto id : *index)
+//   {
+//     auto *health = w->GetComponent<Health>(id);
+//     cout << health->level;
+//   }
+// }
+
+// // Demonstrate some basic assertions.
+// TEST(WorldTest, EntityBuilding)
+// {
+//   World *w = new World(10);
+
+//   unsigned int entityId = w->NewEntityBuilder()
+//                               ->GetId();
+
+//   Health health;
+//   health.level = 3;
+
+//   Position position;
+//   position.x = 10;
+//   position.y = 20;
+
+//   Velocity velocity;
+//   velocity.x = 10;
+//   velocity.y = 20;
+
+//   w->AddSystem(&testUpdate);
+
+//   int entityId1 = w->NewEntityBuilder()
+//                       ->With<Health>(health)
+//                       ->With<Position>(position)
+//                       ->GetId();
+
+//   health.level = 11;
+
+//   // int entityId2 = w->NewEntityBuilder()
+//   //                     ->With<Health>(health)
+//   //                     ->With<Velocity>(velocity);
+
+//   unsigned int query = w->NewQueryBuilder()
+//                            ->Include<Health>()
+//                            ->Ready()
+//                            ->GetQuery();
+
+//   for (unsigned int id = 0; id < w->GetEntities()->GetEntitiesCount(); id++)
+//   {
+//     Health *health1 = w->GetComponent<Health>(id);
+//     cout << health1->level;
+//   }
+
+//   EXPECT_EQ(3, w->GetEntities()->GetEntitiesCount());
+
+//   auto index1 = w->GetIndex(query);
+
+//   // EXPECT_EQ(3, index1.count());
+
+//   testUpdate(w, &index1);
+
+//   w->RemoveComponent<Health>(entityId1);
+
+//   auto index2 = w->GetIndex(query);
+
+//   testUpdate(w, &index2);
+
+//   // EXPECT_EQ(2, index1.count());
+// }
