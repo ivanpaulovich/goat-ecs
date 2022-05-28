@@ -1,28 +1,12 @@
-cmake_minimum_required(VERSION 3.14)
-
-# GoogleTest requires at least C++11
-set(CMAKE_CXX_STANDARD 11)
-
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-)
-# For Windows: Prevent overriding the parent project's compiler/linker settings
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-enable_testing()
-
+# Create a test-driver executable
 file(GLOB CPP_SOURCES *.cpp)
 add_executable(${PROJECT_NAME}-tests ${CPP_SOURCES})
 
-target_link_libraries(
-  ${PROJECT_NAME}-tests
-  PRIVATE foo
-  gtest_main
-  gtest
-)
+# Link with GoogleTest and the foo library itself
+target_link_libraries(${PROJECT_NAME}-tests PRIVATE foo gtest gmock)
 
-include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME}-tests)
+# Add this test-driver
+add_test(
+  NAME ${PROJECT_NAME}-tests
+  COMMAND ${PROJECT_NAME}-tests --gtest_output=xml:${CMAKE_BINARY_DIR}/test-results/${PROJECT_NAME}.xml
+)

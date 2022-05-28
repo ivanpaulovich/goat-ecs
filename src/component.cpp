@@ -1,4 +1,4 @@
-#include "component.h"
+#include <foo/component.h>
 
 template <typename T>
 void Component::Init(const unsigned int size)

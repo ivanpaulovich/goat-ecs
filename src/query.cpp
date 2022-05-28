@@ -1,4 +1,4 @@
-#include "query.h"
+#include <foo/query.h>
 
 Query::Query()
 {

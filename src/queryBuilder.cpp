@@ -1,7 +1,7 @@
-#include "queryBuilder.h"
-#include "query.h"
-#include "world.fwd.h"
-#include "world.h"
+#include <foo/queryBuilder.h>
+#include <foo/query.h>
+#include <foo/world.fwd.h>
+#include <foo/world.h>
 
 QueryBuilder::QueryBuilder(World *world)
 {

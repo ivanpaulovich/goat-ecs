@@ -1,6 +1,6 @@
-#include "entityBuilder.h"
-#include "world.fwd.h"
-#include "world.h"
+#include <foo/entityBuilder.h>
+#include <foo/world.fwd.h>
+#include <foo/world.h>
 
 EntityBuilder::EntityBuilder(World *world)
 {

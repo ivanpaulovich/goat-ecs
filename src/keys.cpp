@@ -1,4 +1,4 @@
-#include "keys.h"
+#include <foo/keys.h>
 
 template <typename T>
 unsigned int Keys::Key()

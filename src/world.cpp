@@ -1,4 +1,4 @@
-#include "world.h"
+#include <foo/world.h>
 
 template <typename T>
 unsigned int World::Key()

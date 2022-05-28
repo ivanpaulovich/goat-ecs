@@ -1,4 +1,4 @@
-#include "entities.h"
+#include <foo/entities.h>
 
 void Entities::SetComponents(const unsigned int id, const unsigned int key)
 {

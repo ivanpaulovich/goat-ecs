@@ -1,5 +1,5 @@
-#include "component.h"
-#include "components.h"
+#include <foo/component.h>
+#include <foo/components.h>
 
 template <typename T>
 void Components::Key(const unsigned int key, const unsigned int size)

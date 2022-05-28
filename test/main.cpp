@@ -1,11 +1,11 @@
-#include <gtest/gtest.h>
+// #include <gtest/gtest.h>
 #include <typeinfo>
 #include <iostream>
 #include <set>
-#include <world.h>
-#include <component.h>
-#include <entities.h>
-#include <components.h>
+#include <foo/world.h>
+#include <foo/component.h>
+#include <foo/entities.h>
+#include <foo/components.h>
 
 struct Position
 {
