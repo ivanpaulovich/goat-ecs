@@ -86,57 +86,55 @@ TEST(WorldTest, ComponentsBuilding)
 
 TEST(WorldTest, WorldBuilding)
 {
-    const unsigned int ENTITIES_SIZE = 10;
+    World w = World(WORLD_SIZE);
 
-    World w = World();
+    Health health;
+    health.level = 100.0f;
 
-    // Health health;
-    // health.level = 100.0f;
+    Position position;
+    position.x = 10;
+    position.y = 20;
 
-    // Position position;
-    // position.x = 10;
-    // position.y = 20;
+    Velocity velocity;
+    velocity.x = 2;
+    velocity.y = 4;
 
-    // Velocity velocity;
-    // velocity.x = 2;
-    // velocity.y = 4;
+    w.NewEntityBuilder()
+        ->With<Health>(health)
+        ->With<Position>(position);
 
-    // w.NewEntityBuilder()
-    //     ->With<Health>(health)
-    //     ->With<Position>(position);
+    w.NewEntityBuilder()
+        ->With<Health>(health)
+        ->With<Position>(position)
+        ->With<Velocity>(velocity);
 
-    //   w.NewEntityBuilder()
-    //       ->With<Health>(health)
-    //       ->With<Position>(position)
-    //       ->With<Velocity>(velocity);
+    w.NewEntityBuilder()
+        ->With<Position>(position)
+        ->With<Velocity>(velocity);
 
-    //   w.NewEntityBuilder()
-    //       ->With<Position>(position)
-    //       ->With<Velocity>(velocity);
+    auto queryHealth = w.NewQueryBuilder()
+                           ->Include<Health>()
+                           ->Ready()
+                           ->GetQuery();
 
-    //   auto queryHealth = w.NewQueryBuilder()
-    //       ->Include<Health>()
-    //       ->Ready()
-    //       ->GetQuery();
+    auto queryPosVel = w.NewQueryBuilder()
+                           ->Include<Position>()
+                           ->Include<Velocity>()
+                           ->Ready()
+                           ->GetQuery();
 
-    //   auto queryPosVel = w.NewQueryBuilder()
-    //       ->Include<Position>()
-    //       ->Include<Velocity>()
-    //       ->Ready()
-    //       ->GetQuery();
+    auto queryPos = w.NewQueryBuilder()
+                        ->Include<Position>()
+                        ->Ready()
+                        ->GetQuery();
 
-    //   auto queryPos = w.NewQueryBuilder()
-    //       ->Include<Position>()
-    //       ->Ready()
-    //       ->GetQuery();
+    auto healthObjects = w.GetIndex(queryHealth);
+    auto posVelObjects = w.GetIndex(queryPosVel);
+    auto posObjects = w.GetIndex(queryPos);
 
-    //   auto healthObjects = w.GetIndex(queryHealth);
-    //   auto posVelObjects = w.GetIndex(queryPosVel);
-    //   auto posObjects = w.GetIndex(queryPos);
-
-    //   // EXPECT_EQ(2, healthObjects.count());
-    //   // EXPECT_EQ(2, posVelObjects.count());
-    //   // EXPECT_EQ(1, posObjects.count());
+    // EXPECT_EQ(2, healthObjects.count());
+    // EXPECT_EQ(2, posVelObjects.count());
+    // EXPECT_EQ(1, posObjects.count());
 }
 
 // void testUpdate(World *w, const set<unsigned int> *index)

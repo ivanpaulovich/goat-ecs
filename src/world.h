@@ -39,10 +39,12 @@ public:
     //     return key;
     // }
 
-    World()
+    World(const unsigned int size)
     {
-        m_entities = new Entities(10);
+        m_entities = new Entities(size);
         m_keys = new Keys();
+        m_components = new Components();
+        m_index = new Index();
     }
 
     ~World() {}
