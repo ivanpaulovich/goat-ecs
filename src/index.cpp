@@ -8,7 +8,7 @@
 #include <functional>
 #include <memory>
 #include <set>
-#include <foo/index.h>
+#include "index.h"
 
 bool Index::IsEntitySignatureInQuery(const unsigned int signature, const unsigned int query)
 {

@@ -1,12 +1,11 @@
-# Create a test-driver executable
-file(GLOB CPP_SOURCES *.cpp)
-add_executable(${PROJECT_NAME}-tests ${CPP_SOURCES})
+set(BINARY ${CMAKE_PROJECT_NAME}_tst)
 
-# Link with GoogleTest and the foo library itself
-target_link_libraries(${PROJECT_NAME}-tests PRIVATE foo gtest gmock)
+file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
 
-# Add this test-driver
-add_test(
-  NAME ${PROJECT_NAME}-tests
-  COMMAND ${PROJECT_NAME}-tests --gtest_output=xml:${CMAKE_BINARY_DIR}/test-results/${PROJECT_NAME}.xml
-)
+set(SOURCES ${TEST_SOURCES})
+
+add_executable(${BINARY} ${TEST_SOURCES})
+
+add_test(NAME ${BINARY} COMMAND ${BINARY})
+
+target_link_libraries(${BINARY} PUBLIC ${CMAKE_PROJECT_NAME}_lib gtest)
