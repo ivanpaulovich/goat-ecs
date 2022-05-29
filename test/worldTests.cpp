@@ -3,25 +3,26 @@
 #include <iostream>
 #include <set>
 #include "world.h"
+#include "worldManager.h"
 #include "component.h"
 #include "entities.h"
 #include "components.h"
 
 struct Position
 {
-  int x;
-  int y;
+    int x;
+    int y;
 };
 
 struct Velocity
 {
-  int x;
-  int y;
+    int x;
+    int y;
 };
 
 struct Health
 {
-  float level;
+    float level;
 };
 
 // class Component1
@@ -46,108 +47,97 @@ const unsigned int WORLD_SIZE = 10;
 
 TEST(WorldTest, EntityBuilding)
 {
-  Entities entities = Entities(WORLD_SIZE);
-  unsigned int id = entities.NewEntity();
-  Component component;
-  component.Init<Position>(WORLD_SIZE);
-  Position *c = component.GetValues<Position>();
+    Entities entities = Entities(WORLD_SIZE);
+    unsigned int id = entities.NewEntity();
+    Component component;
+    component.Init<Position>(WORLD_SIZE);
+    Position *c = component.GetValues<Position>();
 }
 
 TEST(WorldTest, ComponentBuilding)
 {
-  Component component;
-  component.Init<Position>(WORLD_SIZE);
-  Position *positions = component.GetValues<Position>();
+    Component component;
+    component.Init<Position>(WORLD_SIZE);
+    Position *positions = component.GetValues<Position>();
 }
 
 TEST(WorldTest, ComponentsBuilding)
 {
-  const unsigned int POSITION_KEY = 0;
-  const unsigned int POSITION_SIZE = 10;
-  const unsigned int POSITION_ELEMENT_ID = 0;
+    const unsigned int POSITION_KEY = 0;
+    const unsigned int POSITION_SIZE = 10;
+    const unsigned int POSITION_ELEMENT_ID = 0;
 
-  Components components;
-  components.Key<Position>(POSITION_KEY, POSITION_SIZE);
+    Components components;
+    components.Key<Position>(POSITION_KEY, POSITION_SIZE);
 
-  Position *pos1 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
+    Position *pos1 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
 
-  EXPECT_EQ(0, pos1->x);
-  EXPECT_EQ(0, pos1->y);
+    EXPECT_EQ(0, pos1->x);
+    EXPECT_EQ(0, pos1->y);
 
-  pos1->x = 10;
-  pos1->y = 20;
+    pos1->x = 10;
+    pos1->y = 20;
 
-  Position *pos2 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
+    Position *pos2 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
 
-  EXPECT_EQ(10, pos2->x);
-  EXPECT_EQ(20, pos2->y);
+    EXPECT_EQ(10, pos2->x);
+    EXPECT_EQ(20, pos2->y);
 }
 
-TEST(WorldTest, EntityInstantiation)
+TEST(WorldTest, WorldBuilding)
 {
-  const unsigned int ENTITIES_SIZE = 10;
+    const unsigned int ENTITIES_SIZE = 10;
 
-  Entities entities = Entities(ENTITIES_SIZE);
-  unsigned int entityId = entities.NewEntity();
+    World w = World();
 
-  EXPECT_EQ(ENTITIES_SIZE, entities.GetSize());
-  EXPECT_EQ(1, entities.GetCount());
+    // Health health;
+    // health.level = 100.0f;
+
+    // Position position;
+    // position.x = 10;
+    // position.y = 20;
+
+    // Velocity velocity;
+    // velocity.x = 2;
+    // velocity.y = 4;
+
+    // w.NewEntityBuilder()
+    //     ->With<Health>(health)
+    //     ->With<Position>(position);
+
+    //   w.NewEntityBuilder()
+    //       ->With<Health>(health)
+    //       ->With<Position>(position)
+    //       ->With<Velocity>(velocity);
+
+    //   w.NewEntityBuilder()
+    //       ->With<Position>(position)
+    //       ->With<Velocity>(velocity);
+
+    //   auto queryHealth = w.NewQueryBuilder()
+    //       ->Include<Health>()
+    //       ->Ready()
+    //       ->GetQuery();
+
+    //   auto queryPosVel = w.NewQueryBuilder()
+    //       ->Include<Position>()
+    //       ->Include<Velocity>()
+    //       ->Ready()
+    //       ->GetQuery();
+
+    //   auto queryPos = w.NewQueryBuilder()
+    //       ->Include<Position>()
+    //       ->Ready()
+    //       ->GetQuery();
+
+    //   auto healthObjects = w.GetIndex(queryHealth);
+    //   auto posVelObjects = w.GetIndex(queryPosVel);
+    //   auto posObjects = w.GetIndex(queryPos);
+
+    //   // EXPECT_EQ(2, healthObjects.count());
+    //   // EXPECT_EQ(2, posVelObjects.count());
+    //   // EXPECT_EQ(1, posObjects.count());
 }
-
-// TEST(WorldTest, WorldBuilding)
-// {
-//   const unsigned int ENTITIES_SIZE = 10;
-
-//   World w = World(ENTITIES_SIZE);
-
-//   Health health;
-//   health.level = 100.0f;
-
-//   Position position;
-//   position.x = 10;
-//   position.y = 20;
-
-//   Velocity velocity;
-//   velocity.x = 2;
-//   velocity.y = 4;
-
-//   w.NewEntityBuilder()
-//       ->With<Health>(health)
-//       ->With<Position>(position);
-
-//   w.NewEntityBuilder()
-//       ->With<Health>(health)
-//       ->With<Position>(position)
-//       ->With<Velocity>(velocity);
-
-//   w.NewEntityBuilder()
-//       ->With<Position>(position)
-//       ->With<Velocity>(velocity);
-
-//   auto queryHealth = w.NewQueryBuilder()
-//       ->Include<Health>()
-//       ->Ready()
-//       ->GetQuery();
-
-//   auto queryPosVel = w.NewQueryBuilder()
-//       ->Include<Position>()
-//       ->Include<Velocity>()
-//       ->Ready()
-//       ->GetQuery();
-
-//   auto queryPos = w.NewQueryBuilder()
-//       ->Include<Position>()
-//       ->Ready()
-//       ->GetQuery();
-
-//   auto healthObjects = w.GetIndex(queryHealth);
-//   auto posVelObjects = w.GetIndex(queryPosVel);
-//   auto posObjects = w.GetIndex(queryPos);
-
-//   // EXPECT_EQ(2, healthObjects.count());
-//   // EXPECT_EQ(2, posVelObjects.count());
-//   // EXPECT_EQ(1, posObjects.count());
-// }
 
 // void testUpdate(World *w, const set<unsigned int> *index)
 // {

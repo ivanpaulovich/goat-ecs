@@ -8,8 +8,10 @@
 class WorldManager
 {
 public:
-    virtual Keys *GetKeys();
-    virtual Entities *GetEntities();
-    virtual Components *GetComponents();
-    virtual Index *GetIndex();
+    WorldManager(){}
+    virtual ~WorldManager(){}
+    virtual Keys *GetKeys() = 0;
+    virtual Entities *GetEntities() = 0;
+    virtual Components *GetComponents() = 0;
+    virtual Index *GetIndex() = 0;
 };

@@ -21,7 +21,7 @@
 #include "tSystemUpdate.h"
 #include "worldManager.h"
 
-class World: public WorldManager
+class World : public WorldManager
 {
 private:
     Entities *m_entities;
@@ -31,28 +31,42 @@ private:
     vector<TSystemUpdate *> m_systems;
 
 public:
-    template <typename T>
-    unsigned int Key()
+    // template <typename T>
+    // unsigned int Key()
+    // {
+    //     unsigned int key = m_keys->Key<T>();
+    //     m_components->Key<T>(key, m_entities->GetSize());
+    //     return key;
+    // }
+
+    World()
     {
-        unsigned int key = m_keys->Key<T>();
-        m_components->Key<T>(key, m_entities->GetSize());
-        return key;
+        m_entities = new Entities(10);
+        m_keys = new Keys();
     }
 
-    World(const unsigned int size)
+    ~World() {}
+
+    // World() : WorldManager()
+    // {
+    //     m_entities = new Entities(10);
+    //     m_keys = new Keys();
+    // }
+
+    // World(const unsigned int size) : WorldManager()
+    // {
+    //     m_entities = new Entities(size);
+    //     m_keys = new Keys();
+    // }
+
+    Keys *GetKeys()
     {
-        m_entities = new Entities(size);
-        m_keys = new Keys();
+        return m_keys;
     }
 
     Entities *GetEntities()
     {
         return m_entities;
-    }
-
-    Keys *GetKeys()
-    {
-        return m_keys;
     }
 
     Components *GetComponents()
@@ -65,20 +79,20 @@ public:
         return m_index;
     }
 
-    template <typename T>
-    T *GetComponent(const unsigned int id)
-    {
-        unsigned int key = Key<T>();
-        return GetComponents()->GetComponent<T>(key, id);
-    }
+    // template <typename T>
+    // T *GetComponent(const unsigned int id)
+    // {
+    //     unsigned int key = Key<T>();
+    //     return GetComponents()->GetComponent<T>(key, id);
+    // }
 
-    template <typename T>
-    void RemoveComponent(const unsigned int id)
-    {
-        unsigned int key = Key<T>();
-        GetEntities()->RemoveComponent(id, key);
-        GetIndex()->UpdateEntityIndex(id, m_entities->GetEntity(id));
-    }
+    // template <typename T>
+    // void RemoveComponent(const unsigned int id)
+    // {
+    //     unsigned int key = Key<T>();
+    //     GetEntities()->RemoveComponent(id, key);
+    //     GetIndex()->UpdateEntityIndex(id, m_entities->GetEntity(id));
+    // }
 
     set<unsigned int> GetIndex(const unsigned int query)
     {
@@ -92,8 +106,8 @@ public:
 
     void Update()
     {
-        for(auto update : m_systems) {
-
+        for (auto update : m_systems)
+        {
         }
     }
 
