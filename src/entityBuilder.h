@@ -18,9 +18,9 @@ public:
     {
         auto key = m_world->GetKeys()->Key<T>();
         m_world->GetComponents()->Key<T>(key, m_world->GetEntities()->GetSize());
-        m_world->GetEntities()->AddComponent(id, key);
-        m_world->GetIndex()->UpdateEntityIndex(id, m_world->GetEntities()->GetEntity(id));
-        m_world->GetComponents()->SetComponent(key, id, value);
+        m_world->GetEntities()->AddComponent(m_id, key);
+        m_world->GetIndex()->UpdateEntityIndex(m_id, m_world->GetEntities()->GetEntity(m_id));
+        m_world->GetComponents()->SetComponent(key, m_id, value);
 
         return this;
     }
@@ -30,8 +30,8 @@ public:
     {
         auto key = m_world->GetKeys()->Key<T>();
         m_world->GetComponents()->Key<T>(key, m_world->GetEntities()->GetSize());
-        m_world->GetEntities()->AddComponent(id, key);
-        m_world->GetIndex()->UpdateEntityIndex(id, m_world->GetEntities()->GetEntity(id));
+        m_world->GetEntities()->AddComponent(m_id, key);
+        m_world->GetIndex()->UpdateEntityIndex(m_id, m_world->GetEntities()->GetEntity(m_id));
 
         return this;
     }
@@ -40,15 +40,17 @@ public:
     EntityBuilder *RemoveComponent()
     {
         auto key = m_world->GetKeys()->Key<T>();
-        GetEntities()->RemoveComponent(m_id, key);
-        GetIndex()->UpdateEntityIndex(m_id, m_entities->GetEntity(m_id));
+        m_world->GetEntities()->RemoveComponent(m_id, key);
+        m_world->GetIndex()->UpdateEntityIndex(m_id, m_world->GetEntities()->GetEntity(m_id));
+
+        return this;
     }
 
     template <typename T>
     T *GetComponent()
     {
-        unsigned int key = Key<T>();
-        return GetComponents()->GetComponent<T>(key, m_id);
+        auto key = m_world->GetKeys()->Key<T>();
+        return m_world->GetComponents()->GetComponent<T>(key, m_id);
     }
 
     int GetId()

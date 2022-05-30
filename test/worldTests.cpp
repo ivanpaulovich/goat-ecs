@@ -113,8 +113,13 @@ TEST(WorldTest, WorldBuilding)
         ->With<Position>(position)
         ->With<Velocity>(velocity);
 
-    w.LoadEntity(entityId0)
-        ->RemoveComponent<Position>();
+    auto entity = w.LoadEntity(entityId0);
+
+    entity->RemoveComponent<Position>();
+
+    auto h = entity->GetComponent<Health>();
+
+    EXPECT_EQ(100, h->level);
 
     auto queryHealth = w.NewQueryBuilder()
                            ->Include<Health>()
