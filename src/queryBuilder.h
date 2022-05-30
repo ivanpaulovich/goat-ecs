@@ -11,21 +11,37 @@
 #include <memory>
 #include <set>
 #include "query.h"
-
-class World;
+#include "worldManager.h"
 
 class QueryBuilder
 {
 private:
-    World *m_world;
+    WorldManager *m_world;
     Query *m_query;
+
 public:
-    QueryBuilder(World *world);
+    QueryBuilder(WorldManager *world)
+    {
+        m_world = world;
+        m_query = new Query();
+    }
 
     template <typename T>
-    QueryBuilder *Include();
+    QueryBuilder *Include()
+    {
+        auto key = m_world->GetKeys()->Key<T>();
+        m_query->Include(key);
+        return this;
+    }
 
-    QueryBuilder *Ready();
+    QueryBuilder *Ready()
+    {
+        m_world->GetIndex()->AddQuery(m_query->GetInclude());
+        return this;
+    }
 
-    unsigned int GetQuery();
+    unsigned int GetQuery()
+    {
+        return m_query->GetInclude();
+    }
 };

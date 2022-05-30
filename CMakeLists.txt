@@ -1,6 +1,10 @@
-cmake_minimum_required(VERSION 3.0.0)
-project(GoatECS VERSION 0.0.1)
-add_subdirectory (src)
+cmake_minimum_required(VERSION 3.10)
+project(ExampleProject)
 
-enable_testing()
-add_subdirectory (test)
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(src)
+
+add_subdirectory(src)
+add_subdirectory(test)
+add_subdirectory(lib/googletest)

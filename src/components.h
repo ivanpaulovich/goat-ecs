@@ -19,14 +19,32 @@ private:
 
 public:
     template <typename T>
-    void Key(const unsigned int key, const unsigned int size);
+    void Key(const unsigned int key, const unsigned int size)
+    {
+        Component *component = new Component();
+        component->Init<T>(size);
+        m_values[key] = component;
+    }
 
     template <typename T>
-    T *GetComponents(const unsigned int key);
+    T *GetComponents(const unsigned int key)
+    {
+        auto component = m_values[key];
+        auto values = static_cast<T *>(component->GetValues<T>());
+        return values;
+    }
 
     template <typename T>
-    T *GetComponent(const unsigned int key, const unsigned int id);
+    T *GetComponent(const unsigned int key, const unsigned int id)
+    {
+        auto values = GetComponents<T>(key);
+        return &values[id];
+    }
 
     template <typename T>
-    void SetComponent(const unsigned int key, const unsigned int id, const T value);
+    void SetComponent(const unsigned int key, const unsigned int id, const T value)
+    {
+        auto values = GetComponents<T>(key);
+        values[id] = value;
+    }
 };

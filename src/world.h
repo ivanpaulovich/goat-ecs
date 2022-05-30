@@ -18,49 +18,126 @@
 #include "components.h"
 #include "queryBuilder.h"
 #include "entityBuilder.h"
-#include "world.fwd.h"
 #include "tSystemUpdate.h"
+#include "worldManager.h"
 
-class World
+class World : public WorldManager
 {
 private:
     Entities *m_entities;
     Keys *m_keys;
     Components *m_components;
-    Index m_index;
+    Index *m_index;
     vector<TSystemUpdate *> m_systems;
 
-    template <typename T>
-    unsigned int Key();
-
 public:
-    World(const unsigned int size);
+    // template <typename T>
+    // unsigned int Key()
+    // {
+    //     unsigned int key = m_keys->Key<T>();
+    //     m_components->Key<T>(key, m_entities->GetSize());
+    //     return key;
+    // }
 
-    Entities *GetEntities();
+    World(const unsigned int size)
+    {
+        m_entities = new Entities(size);
+        m_keys = new Keys();
+        m_components = new Components();
+        m_index = new Index();
+    }
 
-    Components *GetComponents();
+    ~World() {}
 
-    template <typename T>
-    void AddComponent(const unsigned int id, const T value);
+    // World() : WorldManager()
+    // {
+    //     m_entities = new Entities(10);
+    //     m_keys = new Keys();
+    // }
 
-    template <typename T>
-    void AddComponent(const unsigned int id);
+    // World(const unsigned int size) : WorldManager()
+    // {
+    //     m_entities = new Entities(size);
+    //     m_keys = new Keys();
+    // }
 
-    template <typename T>
-    T *GetComponent(const unsigned int id);
+    Keys *GetKeys()
+    {
+        return m_keys;
+    }
 
-    template <typename T>
-    void RemoveComponent(const unsigned int id);
+    Entities *GetEntities()
+    {
+        return m_entities;
+    }
 
-    set<unsigned int> GetIndex(const unsigned int query);
+    Components *GetComponents()
+    {
+        return m_components;
+    }
 
-    void AddSystem(TSystemUpdate update);
+    Index *GetIndex()
+    {
+        return m_index;
+    }
 
-    void AddQuery(const unsigned int query);
+    // template <typename T>
+    // T *GetComponent(const unsigned int id)
+    // {
+    //     unsigned int key = Key<T>();
+    //     return GetComponents()->GetComponent<T>(key, id);
+    // }
 
-    void Update();
+    // template <typename T>
+    // void RemoveComponent(const unsigned int id)
+    // {
+    //     unsigned int key = Key<T>();
+    //     GetEntities()->RemoveComponent(id, key);
+    //     GetIndex()->UpdateEntityIndex(id, m_entities->GetEntity(id));
+    // }
 
-    QueryBuilder *NewQueryBuilder();
+    set<unsigned int> GetIndex(const unsigned int query)
+    {
+        return GetIndex()->GetIndex(query);
+    }
 
-    EntityBuilder *NewEntityBuilder();
+    void AddSystem(TSystemUpdate update)
+    {
+        m_systems.push_back(update);
+    }
+
+    void Update()
+    {
+        for (auto update : m_systems)
+        {
+        }
+    }
+
+    void AddQuery(const unsigned int query)
+    {
+        GetIndex()->AddQuery(query);
+
+        for (unsigned int id = 0; id < GetEntities()->GetCount(); id++)
+        {
+            GetIndex()->UpdateEntityIndex(id, GetEntities()->GetEntity(id));
+        }
+    }
+
+    QueryBuilder *NewQueryBuilder()
+    {
+        auto queryBuilder = new QueryBuilder(this);
+        return queryBuilder;
+    }
+
+    EntityBuilder *NewEntity()
+    {
+        auto entityBuilder = new EntityBuilder(this, GetEntities()->NewEntity());
+        return entityBuilder;
+    }
+
+    EntityBuilder *LoadEntity(const unsigned int id)
+    {
+        auto entityBuilder = new EntityBuilder(this, id);
+        return entityBuilder;
+    }
 };
