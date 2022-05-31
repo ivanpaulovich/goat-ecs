@@ -121,25 +121,25 @@ TEST(WorldTest, WorldBuilding)
 
     EXPECT_EQ(100, h->level);
 
-    auto queryHealth = w.NewQueryBuilder()
+    auto queryHealth = w.NewQuery()
                            ->Include<Health>()
                            ->Ready()
                            ->GetQuery();
 
-    auto queryPosVel = w.NewQueryBuilder()
+    auto queryPosVel = w.NewQuery()
                            ->Include<Position>()
                            ->Include<Velocity>()
                            ->Ready()
                            ->GetQuery();
 
-    auto queryPos = w.NewQueryBuilder()
+    auto queryPos = w.NewQuery()
                         ->Include<Position>()
                         ->Ready()
                         ->GetQuery();
 
-    auto healthObjects = w.GetIndex(queryHealth);
-    auto posVelObjects = w.GetIndex(queryPosVel);
-    auto posObjects = w.GetIndex(queryPos);
+    auto healthObjects = w.GetIndex().GetIndex(queryHealth);
+    auto posVelObjects = w.GetIndex().GetIndex(queryPosVel);
+    auto posObjects = w.GetIndex().GetIndex(queryPos);
 
     // EXPECT_EQ(2, healthObjects.count());
     // EXPECT_EQ(2, posVelObjects.count());

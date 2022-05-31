@@ -20,10 +20,10 @@ private:
     Query *m_query;
 
 public:
-    QueryBuilder(WorldManager *world)
+    QueryBuilder(WorldManager *world, unsigned int id)
     {
         m_world = world;
-        m_query = new Query();
+        m_query = new Query(id);
     }
 
     template <typename T>
@@ -34,9 +34,23 @@ public:
         return this;
     }
 
+    template <typename T>
+    QueryBuilder *Exclude()
+    {
+        auto key = m_world->GetKeys()->Key<T>();
+        m_query->Exclude(key);
+        return this;
+    }
+
     QueryBuilder *Ready()
     {
         m_world->GetIndex()->AddQuery(m_query->GetInclude());
+
+        for (unsigned int id = 0; id < m_world->GetEntities()->GetCount(); id++)
+        {
+            m_world->GetIndex()->UpdateEntityIndex(id, m_world->GetEntities()->GetEntity(id));
+        }
+
         return this;
     }
 
