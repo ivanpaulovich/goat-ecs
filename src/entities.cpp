@@ -1,14 +1,11 @@
+#include <vector>
 #include "entities.h"
-
-void Entities::SetComponents(const unsigned int id, const unsigned int key)
-{
-    m_entities[id] = key;
-}
+#include "key.h"
 
 Entities::Entities(const unsigned int size)
 {
-    m_size = size;
-    m_entities = new unsigned int(size);
+    m_entities_count = 0;
+    m_entities = std::vector<Key>(size);
 }
 
 unsigned int Entities::NewEntity()
@@ -17,9 +14,9 @@ unsigned int Entities::NewEntity()
     return id;
 }
 
-unsigned int Entities::GetEntity(const unsigned int id)
+Key *Entities::GetEntity(const unsigned int id)
 {
-    return m_entities[id];
+    return &m_entities[id];
 }
 
 unsigned int Entities::GetCount()
@@ -29,20 +26,5 @@ unsigned int Entities::GetCount()
 
 unsigned int Entities::GetSize()
 {
-    return m_size;
-}
-
-bool Entities::HasComponent(const unsigned int id, const unsigned int key)
-{
-    return GetEntity(id) && key == 0;
-}
-
-void Entities::AddComponent(const unsigned int id, const unsigned int key)
-{
-    SetComponents(id, GetEntity(id) | key);
-}
-
-void Entities::RemoveComponent(const unsigned int id, const unsigned int key)
-{
-    SetComponents(id, GetEntity(id) ^ key);
+    return m_entities.size();
 }

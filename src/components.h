@@ -16,7 +16,6 @@ class Components
 {
 private:
     std::map<unsigned int, Component *> m_values;
-
 public:
     template <typename T>
     void Key(const unsigned int key, const unsigned int size)

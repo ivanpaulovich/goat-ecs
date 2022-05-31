@@ -10,52 +10,52 @@
 #include <functional>
 #include <memory>
 #include <set>
-#include "query.h"
+#include "key.h"
 #include "worldManager.h"
 
 class QueryBuilder
 {
 private:
     WorldManager *m_world;
-    Query *m_query;
+    Key *m_key;
 
 public:
     QueryBuilder(WorldManager *world, unsigned int id)
     {
         m_world = world;
-        m_query = new Query(id);
+        m_key = new Key(id);
     }
 
     template <typename T>
     QueryBuilder *Include()
     {
-        auto key = m_world->GetKeys()->Key<T>();
-        m_query->Include(key);
+        auto key = m_world->GetKeys()->GetKey<T>();
+        m_key->Include(key);
         return this;
     }
 
     template <typename T>
     QueryBuilder *Exclude()
     {
-        auto key = m_world->GetKeys()->Key<T>();
-        m_query->Exclude(key);
+        auto key = m_world->GetKeys()->GetKey<T>();
+        m_key->Exclude(key);
         return this;
     }
 
     QueryBuilder *Ready()
     {
-        m_world->GetIndex()->AddQuery(m_query->GetInclude());
+        m_world->GetIndex()->AddQuery(m_key->GetId());
 
         for (unsigned int id = 0; id < m_world->GetEntities()->GetCount(); id++)
         {
-            m_world->GetIndex()->UpdateEntityIndex(id, m_world->GetEntities()->GetEntity(id));
+            m_world->GetIndex()->UpdateEntityIndex(id, m_world->GetEntities()->GetEntity(id)->GetId());
         }
 
         return this;
     }
 
-    unsigned int GetQuery()
+    Key GetKey()
     {
-        return m_query->GetInclude();
+        return *m_key;
     }
 };

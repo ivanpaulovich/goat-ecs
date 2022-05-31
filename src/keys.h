@@ -11,14 +11,15 @@
 #include <memory>
 #include <set>
 #include "typeInfoRef.h"
+#include "key.h"
 
 class Keys
 {
 private:
-    unordered_map<TypeInfoRef, unsigned int, Hasher, EqualTo> m_keys;
+    unordered_map<TypeInfoRef, Key, Hasher, EqualTo> m_keys;
 public:
     template <typename T>
-    unsigned int Key()
+    Key GetKey()
     {
         TypeInfoRef type = typeid(T);
         if (m_keys.find(type) != m_keys.end())
@@ -27,7 +28,7 @@ public:
         }
 
         unsigned int key = 1 << m_keys.size();
-        m_keys[type] = key;
+        m_keys[type] = Key(key);
 
         return key;
     }

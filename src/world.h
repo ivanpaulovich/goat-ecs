@@ -10,7 +10,7 @@
 #include <functional>
 #include <memory>
 #include <set>
-#include "query.h"
+#include "key.h"
 #include "typeInfoRef.h"
 #include "index.h"
 #include "entities.h"
@@ -75,7 +75,7 @@ public:
 
     QueryBuilder *NewQuery()
     {
-        auto queryBuilder = new QueryBuilder(this);
+        auto queryBuilder = new QueryBuilder(this, 0);
         return queryBuilder;
     }
 
