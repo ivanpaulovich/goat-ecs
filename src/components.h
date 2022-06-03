@@ -1,27 +1,16 @@
 #pragma once
 
-#include <array>
-#include <vector>
 #include <map>
-#include <iostream>
-#include <typeinfo>
-#include <unordered_map>
-#include <string>
-#include <functional>
-#include <memory>
-#include <set>
-#include "component.h"
 
 class Components
 {
 private:
-    std::map<unsigned int, Component *> m_values;
+    std::map<unsigned int, void*> m_values;
 public:
     template <typename T>
-    void Key(const unsigned int key, const unsigned int size)
+    void key(const unsigned int key, const unsigned int size)
     {
-        Component *component = new Component();
-        component->Init<T>(size);
+        T *component = new T[size];
         m_values[key] = component;
     }
 
@@ -29,7 +18,7 @@ public:
     T *GetComponents(const unsigned int key)
     {
         auto component = m_values[key];
-        auto values = static_cast<T *>(component->GetValues<T>());
+        auto values = static_cast<T *>(component);
         return values;
     }
 
@@ -37,7 +26,7 @@ public:
     T *GetComponent(const unsigned int key, const unsigned int id)
     {
         auto values = GetComponents<T>(key);
-        return &values[id];
+        return values[id];
     }
 
     template <typename T>

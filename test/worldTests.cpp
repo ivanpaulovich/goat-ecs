@@ -4,7 +4,6 @@
 #include <set>
 #include "world.h"
 #include "worldManager.h"
-#include "component.h"
 #include "entities.h"
 #include "components.h"
 
@@ -45,22 +44,6 @@ struct Health
 
 const unsigned int WORLD_SIZE = 10;
 
-TEST(WorldTest, EntityBuilding)
-{
-    Entities entities = Entities(WORLD_SIZE);
-    unsigned int id = entities.NewEntity();
-    Component component;
-    component.Init<Position>(WORLD_SIZE);
-    Position *c = component.GetValues<Position>();
-}
-
-TEST(WorldTest, ComponentBuilding)
-{
-    Component component;
-    component.Init<Position>(WORLD_SIZE);
-    Position *positions = component.GetValues<Position>();
-}
-
 TEST(WorldTest, ComponentsBuilding)
 {
     const unsigned int POSITION_KEY = 0;
@@ -68,20 +51,22 @@ TEST(WorldTest, ComponentsBuilding)
     const unsigned int POSITION_ELEMENT_ID = 0;
 
     Components components;
-    components.Key<Position>(POSITION_KEY, POSITION_SIZE);
+    components.key<Position>(POSITION_KEY, POSITION_SIZE);
 
-    Position *pos1 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
+    Position pos1 = components.GetComponents<Position>(POSITION_KEY)[POSITION_ELEMENT_ID];
 
-    EXPECT_EQ(0, pos1->x);
-    EXPECT_EQ(0, pos1->y);
+    EXPECT_EQ(0, pos1.x);
+    EXPECT_EQ(0, pos1.y);
 
-    pos1->x = 10;
-    pos1->y = 20;
+    pos1.x = 10;
+    pos1.y = 20;
 
-    Position *pos2 = components.GetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID);
+    components.SetComponent<Position>(POSITION_KEY, POSITION_ELEMENT_ID, pos1);
 
-    EXPECT_EQ(10, pos2->x);
-    EXPECT_EQ(20, pos2->y);
+    Position pos2 = components.GetComponents<Position>(POSITION_KEY)[POSITION_ELEMENT_ID];
+
+    EXPECT_EQ(10, pos2.x);
+    EXPECT_EQ(20, pos2.y);
 }
 
 TEST(WorldTest, WorldBuilding)
@@ -117,29 +102,29 @@ TEST(WorldTest, WorldBuilding)
 
     entity->RemoveComponent<Position>();
 
-    auto h = entity->GetComponent<Health>();
+    // auto h = entity->GetComponents<Health>()[entity->];
 
-    EXPECT_EQ(100, h->level);
+    // EXPECT_EQ(100, h->level);
 
-    auto queryHealth = w.NewQuery()
-                           ->Include<Health>()
-                           ->Ready()
-                           ->GetQuery();
+    // auto queryHealth = w.NewQuery()
+    //                        ->Include<Health>()
+    //                        ->Ready()
+    //                        ->GetKey();
 
-    auto queryPosVel = w.NewQuery()
-                           ->Include<Position>()
-                           ->Include<Velocity>()
-                           ->Ready()
-                           ->GetQuery();
+    // auto queryPosVel = w.NewQuery()
+    //                        ->Include<Position>()
+    //                        ->Include<Velocity>()
+    //                        ->Ready()
+    //                        ->GetKey();
 
-    auto queryPos = w.NewQuery()
-                        ->Include<Position>()
-                        ->Ready()
-                        ->GetQuery();
+    // auto queryPos = w.NewQuery()
+    //                     ->Include<Position>()
+    //                     ->Ready()
+    //                     ->GetKey();
 
-    auto healthObjects = w.GetIndex().GetIndex(queryHealth);
-    auto posVelObjects = w.GetIndex().GetIndex(queryPosVel);
-    auto posObjects = w.GetIndex().GetIndex(queryPos);
+    // auto healthObjects = w.GetIndex()->.GetIndex(queryHealth);
+    // auto posVelObjects = w.GetIndex().GetIndex(queryPosVel);
+    // auto posObjects = w.GetIndex().GetIndex(queryPos);
 
     // EXPECT_EQ(2, healthObjects.count());
     // EXPECT_EQ(2, posVelObjects.count());

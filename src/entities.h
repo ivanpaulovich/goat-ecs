@@ -6,8 +6,9 @@
 class Entities
 {
 private:
+    unsigned int m_size;
     unsigned int m_entities_count;
-    std::vector<Key> m_entities;
+    Key *m_entities;
 public:
     Entities(const unsigned int size);
 

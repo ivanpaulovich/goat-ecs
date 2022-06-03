@@ -5,6 +5,11 @@ class Key
 private:
     unsigned int m_id;
 public:
+    Key()
+    {
+        m_id = 0;
+    }
+
     Key(unsigned int id)
     {
         m_id = id;

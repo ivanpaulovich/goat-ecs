@@ -17,10 +17,10 @@ public:
     EntityBuilder *With(const T value)
     {
         auto key = m_world->GetKeys()->GetKey<T>();
-        m_world->GetComponents()->Key<T>(key, m_world->GetEntities()->GetSize());
-        m_world->GetEntities()->GetEntity(m_id)->Include(key);
+        m_world->GetComponents()->key<T>(key.GetId(), m_world->GetEntities()->GetSize());
+        m_world->GetEntities()->GetEntity(m_id)->Include(key.GetId());
         m_world->GetIndex()->UpdateEntityIndex(m_id, m_world->GetEntities()->GetEntity(m_id)->GetId());
-        m_world->GetComponents()->SetComponent(key, m_id, value);
+        m_world->GetComponents()->SetComponent(key.GetId(), m_id, value);
 
         return this;
     }
@@ -29,8 +29,8 @@ public:
     EntityBuilder *With()
     {
         auto key = m_world->GetKeys()->GetKey<T>();
-        m_world->GetComponents()->Key<T>(key, m_world->GetEntities()->GetSize());
-        m_world->GetEntities()->GetEntity(m_id)->Include(key);
+        m_world->GetComponents()->key<T>(key.GetId(), m_world->GetEntities()->GetSize());
+        m_world->GetEntities()->GetEntity(m_id)->Include(key.GetId());
         m_world->GetIndex()->UpdateEntityIndex(m_id, m_world->GetEntities()->GetEntity(m_id)->GetId());
 
         return this;
@@ -40,7 +40,7 @@ public:
     EntityBuilder *RemoveComponent()
     {
         auto key = m_world->GetKeys()->GetKey<T>();
-        m_world->GetEntities()->GetEntity(m_id)->Exclude(key);
+        m_world->GetEntities()->GetEntity(m_id)->Exclude(key.GetId());
         m_world->GetIndex()->UpdateEntityIndex(m_id, m_world->GetEntities()->GetEntity(m_id)->GetId());
 
         return this;
@@ -50,7 +50,7 @@ public:
     T *GetComponent()
     {
         auto key = m_world->GetKeys()->GetKey<T>();
-        return m_world->GetComponents()->GetComponent<T>(key, m_id);
+        return m_world->GetComponents()->GetComponents<T>(key.GetId())[m_id];
     }
 
     int GetId()

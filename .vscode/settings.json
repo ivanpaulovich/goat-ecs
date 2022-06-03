@@ -77,6 +77,7 @@
         "iterator": "cpp",
         "utility": "cpp",
         "filesystem": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "condition_variable": "cpp"
     }
 }

@@ -30,7 +30,7 @@ public:
     QueryBuilder *Include()
     {
         auto key = m_world->GetKeys()->GetKey<T>();
-        m_key->Include(key);
+        m_key->Include(key.GetId());
         return this;
     }
 

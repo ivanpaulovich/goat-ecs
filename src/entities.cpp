@@ -4,8 +4,9 @@
 
 Entities::Entities(const unsigned int size)
 {
+    m_size = size;
     m_entities_count = 0;
-    m_entities = std::vector<Key>(size);
+    m_entities = new Key[m_size];
 }
 
 unsigned int Entities::NewEntity()
@@ -26,5 +27,5 @@ unsigned int Entities::GetCount()
 
 unsigned int Entities::GetSize()
 {
-    return m_entities.size();
+    return m_size;
 }
