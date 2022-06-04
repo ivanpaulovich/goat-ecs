@@ -41,8 +41,7 @@ TEST(WorldTest, WorldBuilding)
 
     w.newEntity()
         ->with<Health>({50.0f})
-        ->with<Position>({10, 30})
-        ->getId();
+        ->with<Position>({10, 30});
 
     w.newEntity()
         ->with<Health>({10.0f})
