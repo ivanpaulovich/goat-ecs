@@ -11,15 +11,16 @@
 #include <memory>
 #include <set>
 #include "key.h"
-#include "typeInfoRef.h"
+#include "type-info-ref.h"
 #include "index.h"
 #include "entities.h"
 #include "keys.h"
 #include "components.h"
-#include "queryBuilder.h"
-#include "entityBuilder.h"
-#include "tSystemUpdate.h"
-#include "worldManager.h"
+#include "query-builder.h"
+#include "entity-builder.h"
+#include "t-system-update.h"
+#include "world-manager.h"
+#include "entities-set.h"
 
 class World : public WorldManager
 {
@@ -29,7 +30,9 @@ private:
     Components *m_components;
     Index *m_index;
     vector<TSystemUpdate *> m_systems;
-
+    EntitiesSet *m_entities_added;
+    EntitiesSet *m_entities_modified;
+    EntitiesSet *m_entities_disabled;
 public:
     World(const unsigned int size)
     {
@@ -37,61 +40,79 @@ public:
         m_keys = new Keys();
         m_components = new Components();
         m_index = new Index();
+        m_entities_added = new EntitiesSet();
+        m_entities_modified = new EntitiesSet();
+        m_entities_disabled = new EntitiesSet();
     }
 
     ~World() {}
 
-    Keys *GetKeys()
+    Keys *getKeys()
     {
         return m_keys;
     }
 
-    Entities *GetEntities()
+    Entities *getEntities()
     {
         return m_entities;
     }
 
-    Components *GetComponents()
+    EntitiesSet *getAddedEntities()
+    {
+        return m_entities_added;
+    }
+
+    EntitiesSet *getModifiedEntities()
+    {
+        return m_entities_modified;
+    }
+
+    EntitiesSet *getDisabledEntities()
+    {
+        return m_entities_disabled;
+    }
+
+    Components *getComponents()
     {
         return m_components;
     }
 
-    Index *GetIndex()
+    Index *getIndex()
     {
         return m_index;
     }
 
-    void AddSystem(TSystemUpdate update)
+    void addSystem(TSystemUpdate update)
     {
         m_systems.push_back(update);
     }
 
-    void Update()
+    void update()
     {
         for (auto update : m_systems)
         {
         }
     }
 
-    QueryBuilder *NewQuery()
+    QueryBuilder *newQuery()
     {
         auto queryBuilder = new QueryBuilder(this, 0);
         return queryBuilder;
     }
 
-    QueryBuilder *LoadQuery(const unsigned int id)
+    QueryBuilder *loadQuery(const unsigned int id)
     {
         auto queryBuilder = new QueryBuilder(this, id);
         return queryBuilder;
     }
 
-    EntityBuilder *NewEntity()
+    EntityBuilder *newEntity()
     {
-        auto entityBuilder = new EntityBuilder(this, GetEntities()->NewEntity());
+        auto entityBuilder = new EntityBuilder(this, getEntities()->newEntity());
         return entityBuilder;
     }
 
-    EntityBuilder *LoadEntity(const unsigned int id)
+    EntityBuilder *loadEntity(const unsigned int id)
     {
         auto entityBuilder = new EntityBuilder(this, id);
         return entityBuilder;

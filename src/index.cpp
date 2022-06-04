@@ -47,7 +47,7 @@ void Index::RemoveQuery(const unsigned int query)
     m_indexes.erase(query);
 }
 
-std::set<unsigned int> Index::GetIndex(const unsigned int query)
+std::set<unsigned int> Index::getIndex(const unsigned int query)
 {
     return m_indexes[query];
 }

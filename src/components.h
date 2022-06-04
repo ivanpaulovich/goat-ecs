@@ -15,7 +15,7 @@ public:
     }
 
     template <typename T>
-    T *GetComponents(const unsigned int key)
+    T *getComponents(const unsigned int key)
     {
         auto component = m_values[key];
         auto values = static_cast<T *>(component);
@@ -23,16 +23,16 @@ public:
     }
 
     template <typename T>
-    T *GetComponent(const unsigned int key, const unsigned int id)
+    T *getComponent(const unsigned int key, const unsigned int id)
     {
-        auto values = GetComponents<T>(key);
+        auto values = getComponents<T>(key);
         return values[id];
     }
 
     template <typename T>
-    void SetComponent(const unsigned int key, const unsigned int id, const T value)
+    void setComponent(const unsigned int key, const unsigned int id, const T value)
     {
-        auto values = GetComponents<T>(key);
+        auto values = getComponents<T>(key);
         values[id] = value;
     }
 };

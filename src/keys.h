@@ -10,7 +10,7 @@
 #include <functional>
 #include <memory>
 #include <set>
-#include "typeInfoRef.h"
+#include "type-info-ref.h"
 #include "key.h"
 
 class Keys
@@ -19,7 +19,7 @@ private:
     unordered_map<TypeInfoRef, Key, Hasher, EqualTo> m_keys;
 public:
     template <typename T>
-    Key GetKey()
+    Key getKey()
     {
         TypeInfoRef type = typeid(T);
         if (m_keys.find(type) != m_keys.end())

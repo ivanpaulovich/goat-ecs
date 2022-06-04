@@ -12,11 +12,11 @@ private:
 public:
     Entities(const unsigned int size);
 
-    unsigned int NewEntity();
+    unsigned int newEntity();
 
-    Key *GetEntity(const unsigned int id);
+    Key *getEntity(const unsigned int id);
 
-    unsigned int GetCount();
+    unsigned int getCount();
 
-    unsigned int GetSize();
+    unsigned int getSize();
 };

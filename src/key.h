@@ -15,22 +15,22 @@ public:
         m_id = id;
     }
 
-    void Include(unsigned int value)
+    void include(unsigned int value)
     {
         m_id |= value;
     }
 
-    void Exclude(unsigned int value)
+    void exclude(unsigned int value)
     {
         m_id ^= value;
     }
 
-    bool HasComponent(const unsigned int value)
+    bool hasComponent(const unsigned int value)
     {
         return m_id && value == 0;
     }
 
-    unsigned int GetId()
+    unsigned int getId()
     {
         return m_id;
     }

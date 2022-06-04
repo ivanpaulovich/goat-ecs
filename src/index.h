@@ -1,14 +1,5 @@
 #pragma once
 
-#include <array>
-#include <vector>
-#include <map>
-#include <iostream>
-#include <typeinfo>
-#include <unordered_map>
-#include <string>
-#include <functional>
-#include <memory>
 #include <set>
 
 class Index
@@ -29,7 +20,7 @@ public:
 
     void RemoveQuery(const unsigned int query);
 
-    std::set<unsigned int> GetIndex(const unsigned int query);
+    std::set<unsigned int> getIndex(const unsigned int query);
 
     void UpdateEntityIndex(const unsigned int id, const unsigned int signature);
 };

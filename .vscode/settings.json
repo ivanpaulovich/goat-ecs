@@ -78,6 +78,7 @@
         "utility": "cpp",
         "filesystem": "cpp",
         "thread": "cpp",
-        "condition_variable": "cpp"
+        "condition_variable": "cpp",
+        "queue": "cpp"
     }
 }
