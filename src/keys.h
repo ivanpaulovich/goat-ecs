@@ -13,23 +13,27 @@
 #include "type-info-ref.h"
 #include "key.h"
 
-class Keys
+namespace goat
 {
-private:
-    unordered_map<TypeInfoRef, Key, Hasher, EqualTo> m_keys;
-public:
-    template <typename T>
-    Key getKey()
+    class Keys
     {
-        TypeInfoRef type = typeid(T);
-        if (m_keys.find(type) != m_keys.end())
+    private:
+        unordered_map<TypeInfoRef, Key, Hasher, EqualTo> m_keys;
+
+    public:
+        template <typename T>
+        Key getKey()
         {
-            return m_keys[type];
+            TypeInfoRef type = typeid(T);
+            if (m_keys.find(type) != m_keys.end())
+            {
+                return m_keys[type];
+            }
+
+            unsigned int key = 1 << m_keys.size();
+            m_keys[type] = Key(key);
+
+            return key;
         }
-
-        unsigned int key = 1 << m_keys.size();
-        m_keys[type] = Key(key);
-
-        return key;
-    }
-};
+    };
+}

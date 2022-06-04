@@ -3,20 +3,24 @@
 #include <vector>
 #include "key.h"
 
-class Entities
+namespace goat
 {
-private:
-    unsigned int m_size;
-    unsigned int m_entities_count;
-    Key *m_entities;
-public:
-    Entities(const unsigned int size);
+    class Entities
+    {
+    private:
+        unsigned int m_size;
+        unsigned int m_entities_count;
+        Key *m_entities;
 
-    unsigned int newEntity();
+    public:
+        Entities(const unsigned int size);
 
-    Key *getEntity(const unsigned int id);
+        unsigned int newEntity();
 
-    unsigned int getCount();
+        Key *getEntity(const unsigned int id);
 
-    unsigned int getSize();
-};
+        unsigned int getCount();
+
+        unsigned int getSize();
+    };
+}

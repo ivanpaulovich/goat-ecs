@@ -22,99 +22,103 @@
 #include "world-manager.h"
 #include "entities-set.h"
 
-class World : public WorldManager
+namespace goat
 {
-private:
-    Entities *m_entities;
-    Keys *m_keys;
-    Components *m_components;
-    Index *m_index;
-    vector<TSystemUpdate *> m_systems;
-    EntitiesSet *m_entities_added;
-    EntitiesSet *m_entities_modified;
-    EntitiesSet *m_entities_disabled;
-public:
-    World(const unsigned int size)
+    class World : public WorldManager
     {
-        m_entities = new Entities(size);
-        m_keys = new Keys();
-        m_components = new Components();
-        m_index = new Index();
-        m_entities_added = new EntitiesSet();
-        m_entities_modified = new EntitiesSet();
-        m_entities_disabled = new EntitiesSet();
-    }
+    private:
+        Entities *m_entities;
+        Keys *m_keys;
+        Components *m_components;
+        Index *m_index;
+        vector<TSystemUpdate *> m_systems;
+        EntitiesSet *m_entities_added;
+        EntitiesSet *m_entities_modified;
+        EntitiesSet *m_entities_disabled;
 
-    ~World() {}
-
-    Keys *getKeys()
-    {
-        return m_keys;
-    }
-
-    Entities *getEntities()
-    {
-        return m_entities;
-    }
-
-    EntitiesSet *getAddedEntities()
-    {
-        return m_entities_added;
-    }
-
-    EntitiesSet *getModifiedEntities()
-    {
-        return m_entities_modified;
-    }
-
-    EntitiesSet *getDisabledEntities()
-    {
-        return m_entities_disabled;
-    }
-
-    Components *getComponents()
-    {
-        return m_components;
-    }
-
-    Index *getIndex()
-    {
-        return m_index;
-    }
-
-    void addSystem(TSystemUpdate update)
-    {
-        m_systems.push_back(update);
-    }
-
-    void update()
-    {
-        for (auto update : m_systems)
+    public:
+        World(const unsigned int size)
         {
+            m_entities = new Entities(size);
+            m_keys = new Keys();
+            m_components = new Components();
+            m_index = new Index();
+            m_entities_added = new EntitiesSet();
+            m_entities_modified = new EntitiesSet();
+            m_entities_disabled = new EntitiesSet();
         }
-    }
 
-    QueryBuilder *newQuery()
-    {
-        auto queryBuilder = new QueryBuilder(this, 0);
-        return queryBuilder;
-    }
+        ~World() {}
 
-    QueryBuilder *loadQuery(const unsigned int id)
-    {
-        auto queryBuilder = new QueryBuilder(this, id);
-        return queryBuilder;
-    }
+        Keys *getKeys()
+        {
+            return m_keys;
+        }
 
-    EntityBuilder *newEntity()
-    {
-        auto entityBuilder = new EntityBuilder(this, getEntities()->newEntity());
-        return entityBuilder;
-    }
+        Entities *getEntities()
+        {
+            return m_entities;
+        }
 
-    EntityBuilder *loadEntity(const unsigned int id)
-    {
-        auto entityBuilder = new EntityBuilder(this, id);
-        return entityBuilder;
-    }
-};
+        EntitiesSet *getAddedEntities()
+        {
+            return m_entities_added;
+        }
+
+        EntitiesSet *getModifiedEntities()
+        {
+            return m_entities_modified;
+        }
+
+        EntitiesSet *getDisabledEntities()
+        {
+            return m_entities_disabled;
+        }
+
+        Components *getComponents()
+        {
+            return m_components;
+        }
+
+        Index *getIndex()
+        {
+            return m_index;
+        }
+
+        void addSystem(TSystemUpdate update)
+        {
+            m_systems.push_back(update);
+        }
+
+        void update()
+        {
+            for (auto update : m_systems)
+            {
+            }
+        }
+
+        QueryBuilder *newQuery()
+        {
+            auto queryBuilder = new QueryBuilder(this, 0);
+            return queryBuilder;
+        }
+
+        QueryBuilder *loadQuery(const unsigned int id)
+        {
+            auto queryBuilder = new QueryBuilder(this, id);
+            return queryBuilder;
+        }
+
+        EntityBuilder *newEntity()
+        {
+            auto entityBuilder = new EntityBuilder(this, getEntities()->newEntity());
+            return entityBuilder;
+        }
+
+        EntityBuilder *loadEntity(const unsigned int id)
+        {
+            auto entityBuilder = new EntityBuilder(this, id);
+            return entityBuilder;
+        }
+    };
+}

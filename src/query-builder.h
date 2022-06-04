@@ -3,49 +3,52 @@
 #include "key.h"
 #include "world-manager.h"
 
-class QueryBuilder
+namespace goat
 {
-private:
-    WorldManager *m_world;
-    Key *m_key;
-
-public:
-    QueryBuilder(WorldManager *world, unsigned int id)
+    class QueryBuilder
     {
-        m_world = world;
-        m_key = new Key(id);
-    }
+    private:
+        WorldManager *m_world;
+        Key *m_key;
 
-    template <typename T>
-    QueryBuilder *include()
-    {
-        auto key = m_world->getKeys()->getKey<T>();
-        m_key->include(key.GetId());
-        return this;
-    }
-
-    template <typename T>
-    QueryBuilder *exclude()
-    {
-        auto key = m_world->getKeys()->getKey<T>();
-        m_key->exclude(key);
-        return this;
-    }
-
-    QueryBuilder *Ready()
-    {
-        m_world->getIndex()->AddQuery(m_key->getId());
-
-        for (unsigned int id = 0; id < m_world->getEntities()->getCount(); id++)
+    public:
+        QueryBuilder(WorldManager *world, unsigned int id)
         {
-            m_world->getIndex()->UpdateEntityIndex(id, m_world->getEntities()->getEntity(id)->getId());
+            m_world = world;
+            m_key = new Key(id);
         }
 
-        return this;
-    }
+        template <typename T>
+        QueryBuilder *include()
+        {
+            auto key = m_world->getKeys()->getKey<T>();
+            m_key->include(key.getId());
+            return this;
+        }
 
-    Key GetKey()
-    {
-        return *m_key;
-    }
-};
+        template <typename T>
+        QueryBuilder *exclude()
+        {
+            auto key = m_world->getKeys()->getKey<T>();
+            m_key->exclude(key.getId());
+            return this;
+        }
+
+        QueryBuilder *Ready()
+        {
+            m_world->getIndex()->AddQuery(m_key->getId());
+
+            for (unsigned int id = 0; id < m_world->getEntities()->getCount(); id++)
+            {
+                m_world->getIndex()->UpdateEntityIndex(id, m_world->getEntities()->getEntity(id)->getId());
+            }
+
+            return this;
+        }
+
+        Key GetKey()
+        {
+            return *m_key;
+        }
+    };
+}

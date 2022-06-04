@@ -1,6 +1,10 @@
 #include <iostream>
 #include "world.h"
 
-int main() {
-    return 0;
+namespace goat
+{
+    int main()
+    {
+        return 0;
+    }
 }

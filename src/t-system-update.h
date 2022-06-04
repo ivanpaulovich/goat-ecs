@@ -12,4 +12,7 @@
 #include <set>
 #include "world.fwd.h"
 
-typedef void(TSystemUpdate)(World *, const set<unsigned int> *index);
+namespace goat
+{
+    typedef void(TSystemUpdate)(World *, const set<unsigned int> *index);
+}

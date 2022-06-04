@@ -23,40 +23,40 @@ struct Health
 };
 ```
 
-## Initialize the Properties
-
-```c
-Health health;
-health.level = 100.0f;
-
-Position position;
-position.x = 10;
-position.y = 20;
-
-Velocity velocity;
-velocity.x = 2;
-velocity.y = 4;
-```
-
 ## Entities Building
 
 ```c
-World w = new World(100);
+World w = World(WORLD_SIZE);
 
 w.newEntity()
-    ->with<Health>(health)
-    ->with<Position>(position)
-    ->with<Velocity>(velocity);
+    ->with<Health>({50.0f})
+    ->with<Position>({10, 30})
+    ->getId();
 
-/* Queries (coming soon) */
+w.newEntity()
+    ->with<Health>({10.0f})
+    ->with<Position>({20, 40})
+    ->with<Velocity>({2, 3});
 
-/* Systems (coming soon) */
-
+w.newEntity()
+    ->with<Velocity>({0, 3})
+    ->with<Position>({2, 1});
 ```
 
 ## Queries
 
-Coming soon.
+```c
+auto queryHealth = w.newQuery()
+                        ->include<Health>()
+                        ->Ready()
+                        ->GetKey();
+
+auto healthObjects = w.getIndex()
+                            ->getIndex(queryHealth.getId());
+
+cout << healthObjects.size();
+// Prints 2
+```
 
 ## Systems
 

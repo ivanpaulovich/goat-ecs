@@ -7,18 +7,21 @@ using namespace std;
 
 using TypeInfoRef = reference_wrapper<const type_info>;
 
-struct Hasher
+namespace goat
 {
-    unsigned int operator()(TypeInfoRef code) const
+    struct Hasher
     {
-        return code.get().hash_code();
-    }
-};
+        unsigned int operator()(TypeInfoRef code) const
+        {
+            return code.get().hash_code();
+        }
+    };
 
-struct EqualTo
-{
-    bool operator()(TypeInfoRef lhs, TypeInfoRef rhs) const
+    struct EqualTo
     {
-        return lhs.get() == rhs.get();
-    }
-};
+        bool operator()(TypeInfoRef lhs, TypeInfoRef rhs) const
+        {
+            return lhs.get() == rhs.get();
+        }
+    };
+}

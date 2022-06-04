@@ -1,37 +1,41 @@
 #pragma once
 
-class Key
+namespace goat
 {
-private:
-    unsigned int m_id;
-public:
-    Key()
+    class Key
     {
-        m_id = 0;
-    }
+    private:
+        unsigned int m_id;
 
-    Key(unsigned int id)
-    {
-        m_id = id;
-    }
+    public:
+        Key()
+        {
+            m_id = 0;
+        }
 
-    void include(unsigned int value)
-    {
-        m_id |= value;
-    }
+        Key(unsigned int id)
+        {
+            m_id = id;
+        }
 
-    void exclude(unsigned int value)
-    {
-        m_id ^= value;
-    }
+        void include(unsigned int value)
+        {
+            m_id |= value;
+        }
 
-    bool hasComponent(const unsigned int value)
-    {
-        return m_id && value == 0;
-    }
+        void exclude(unsigned int value)
+        {
+            m_id ^= value;
+        }
 
-    unsigned int getId()
-    {
-        return m_id;
-    }
-};
+        bool hasComponent(const unsigned int value)
+        {
+            return m_id && value == 0;
+        }
+
+        unsigned int getId()
+        {
+            return m_id;
+        }
+    };
+}
