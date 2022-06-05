@@ -8,16 +8,16 @@ namespace goat
     {
         WorldManager *m_world;
         unsigned int m_id;
+
         template <typename T>
-        Key include()
+        Key init()
         {
             auto key = m_world->getKeys()->getKey<T>();
             m_world->getComponents()->key<T>(key.getId(), m_world->getEntities()->getSize());
             m_world->getEntities()->getEntity(m_id)->include(key.getId());
-            m_world->getModifiedEntities()->insert(m_id);
+
             return key;
         }
-
     public:
         EntityBuilder(WorldManager *world, const unsigned int id)
         {
@@ -26,28 +26,27 @@ namespace goat
         }
 
         template <typename T>
-        EntityBuilder *with(const T value)
+        EntityBuilder *include(const T value)
         {
-            auto key = include<T>();
+            auto key = init<T>();
             m_world->getComponents()->setComponent(key.getId(), m_id, value);
 
             return this;
         }
 
         template <typename T>
-        EntityBuilder *with()
+        EntityBuilder *include()
         {
-            include<T>();
+            init<T>();
 
             return this;
         }
 
         template <typename T>
-        EntityBuilder *disable()
+        EntityBuilder *exclude()
         {
             auto key = m_world->getKeys()->getKey<T>();
             m_world->getEntities()->getEntity(m_id)->exclude(key.getId());
-            m_world->getModifiedEntities()->insert(m_id);
 
             return this;
         }
@@ -59,9 +58,14 @@ namespace goat
             return m_world->getComponents()->getComponents<T>(key.getId())[m_id];
         }
 
-        void disable()
+        void destroy()
         {
-            m_world->getModifiedEntities()->insert(m_id);
+            m_world->getDestroyedEntities()->insert(m_id);
+        }
+
+        void apply()
+        {
+            m_world->getIndex()->updateEntityIndex(m_id, m_world->getEntities()->getEntity(m_id)->getId());
         }
 
         int getId()

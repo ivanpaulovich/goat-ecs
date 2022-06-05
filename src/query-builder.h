@@ -34,19 +34,19 @@ namespace goat
             return this;
         }
 
-        QueryBuilder *Ready()
+        QueryBuilder *apply()
         {
-            m_world->getIndex()->AddQuery(m_key->getId());
+            m_world->getIndex()->addQuery(m_key->getId());
 
             for (unsigned int id = 0; id < m_world->getEntities()->getCount(); id++)
             {
-                m_world->getIndex()->UpdateEntityIndex(id, m_world->getEntities()->getEntity(id)->getId());
+                m_world->getIndex()->updateEntityIndex(id, m_world->getEntities()->getEntity(id)->getId());
             }
 
             return this;
         }
 
-        Key GetKey()
+        Key getKey()
         {
             return *m_key;
         }

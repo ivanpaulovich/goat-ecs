@@ -21,6 +21,7 @@
 #include "t-system-update.h"
 #include "world-manager.h"
 #include "entities-set.h"
+#include "keys-map.h"
 
 namespace goat
 {
@@ -32,9 +33,10 @@ namespace goat
         Components *m_components;
         Index *m_index;
         vector<TSystemUpdate *> m_systems;
-        EntitiesSet *m_entities_added;
-        EntitiesSet *m_entities_modified;
-        EntitiesSet *m_entities_disabled;
+        EntitiesSet *m_entities_created;
+        EntitiesSet *m_entities_destroyed;
+        KeysMap *m_components_included;
+        KeysMap *m_components_excluded;
 
     public:
         World(const unsigned int size)
@@ -43,9 +45,10 @@ namespace goat
             m_keys = new Keys();
             m_components = new Components();
             m_index = new Index();
-            m_entities_added = new EntitiesSet();
-            m_entities_modified = new EntitiesSet();
-            m_entities_disabled = new EntitiesSet();
+            m_entities_created = new EntitiesSet();
+            m_entities_destroyed = new EntitiesSet();
+            m_components_included = new KeysMap();
+            m_components_excluded = new KeysMap();
         }
 
         ~World() {}
@@ -60,19 +63,24 @@ namespace goat
             return m_entities;
         }
 
-        EntitiesSet *getAddedEntities()
+        KeysMap *getIncludedComponents()
         {
-            return m_entities_added;
+            return m_components_included;
         }
 
-        EntitiesSet *getModifiedEntities()
+        KeysMap *getExcludedComponents()
         {
-            return m_entities_modified;
+            return m_components_excluded;
         }
 
-        EntitiesSet *getDisabledEntities()
+        EntitiesSet *getCreatedEntities()
         {
-            return m_entities_disabled;
+            return m_entities_created;
+        }
+
+        EntitiesSet *getDestroyedEntities()
+        {
+            return m_entities_destroyed;
         }
 
         Components *getComponents()

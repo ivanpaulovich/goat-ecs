@@ -26,34 +26,37 @@ struct Health
 ## Entities Building
 
 ```c
-World w = World(WORLD_SIZE);
+World w = World(100);
 
 w.newEntity()
-    ->with<Health>({50.0f})
-    ->with<Position>({10, 30});
+    ->include<Health>({50.0f})
+    ->include<Position>({10, 30})
+    ->apply();
 
 w.newEntity()
-    ->with<Health>({10.0f})
-    ->with<Position>({20, 40})
-    ->with<Velocity>({2, 3});
+    ->include<Health>({10.0f})
+    ->include<Position>({20, 40})
+    ->include<Velocity>({2, 3})
+    ->apply();
 
 w.newEntity()
-    ->with<Velocity>({0, 3})
-    ->with<Position>({2, 1});
+    ->include<Velocity>({0, 3})
+    ->include<Position>({2, 1})
+    ->apply();
 ```
 
 ## Queries
 
 ```c
 auto queryHealth = w.newQuery()
-                        ->include<Health>()
-                        ->Ready()
-                        ->GetKey();
+    ->include<Health>()
+    ->apply()
+    ->getKey();
 
 auto healthObjects = w.getIndex()
-                            ->getIndex(queryHealth.getId());
+    ->getIndex(queryHealth.getId());
 
-cout << healthObjects.size();
+std::cout << healthObjects.size();
 // Prints 2
 ```
 

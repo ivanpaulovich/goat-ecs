@@ -39,5 +39,4 @@ namespace goat
             values[id] = value;
         }
     };
-
 }

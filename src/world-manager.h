@@ -5,6 +5,7 @@
 #include "index.h"
 #include "keys.h"
 #include "entities-set.h"
+#include "keys-map.h"
 
 namespace goat
 {
@@ -17,8 +18,9 @@ namespace goat
         virtual Entities *getEntities() = 0;
         virtual Components *getComponents() = 0;
         virtual Index *getIndex() = 0;
-        virtual EntitiesSet *getAddedEntities() = 0;
-        virtual EntitiesSet *getModifiedEntities() = 0;
-        virtual EntitiesSet *getDisabledEntities() = 0;
+        virtual KeysMap *getIncludedComponents() = 0;
+        virtual KeysMap *getExcludedComponents() = 0;
+        virtual EntitiesSet *getCreatedEntities() = 0;
+        virtual EntitiesSet *getDestroyedEntities() = 0;
     };
 }
