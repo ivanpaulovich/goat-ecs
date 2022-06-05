@@ -15,6 +15,6 @@ namespace goat
         virtual Keys *getKeys() = 0;
         virtual Entities *getEntities() = 0;
         virtual Components *getComponents() = 0;
-        virtual Index *getIndexes() = 0;
+        virtual Indexes *getIndexes() = 0;
     };
 }

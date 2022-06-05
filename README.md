@@ -1,6 +1,6 @@
 # Goat-ECS
 
-Goat-ECS is a friendly and pure Entity-Component System. Dynamically build objects, then query the ones with similar properties the same approach you would query a database. Goat-ECS library is an API to manipulate object properties which tracks schema changes and indexes the entity ids optimized for the best query performance.
+Goat-ECS is an Entity-Component System with a friendly API to build objects with dynamic components.
 
 ## Entities Building
 
@@ -27,16 +27,19 @@ w.newEntity()
 ## Queries
 
 ```c
-auto queryHealth = w.newQuery()
+// Returns the ids of entities matching the component type Health
+auto healthIds = w.newQuery()
     ->include<Health>()
     ->apply()
-    ->getKey();
+    ->getIndex();
 
-auto healthObjects = w.getIndex()
-    ->getIndex(queryHealth.getId());
+for (auto id : *healthIds)
+{
+    auto health = w.loadEntity(id)
+        ->get<Health>();
 
-std::cout << healthObjects.size();
-// Prints 2
+    std::cout << health->level << " ";
+}
 ```
 
 ## Design Your Own Components

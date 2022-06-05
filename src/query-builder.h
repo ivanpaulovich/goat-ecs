@@ -55,5 +55,10 @@ namespace goat
         {
             return *m_key;
         }
+
+        std::set<unsigned int> *getIndex()
+        {
+            return m_world->getIndexes()->getIndex(m_key->getId());
+        }
     };
 }

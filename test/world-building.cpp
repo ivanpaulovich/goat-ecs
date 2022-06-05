@@ -55,13 +55,18 @@ TEST(WorldTest, WorldBuilding)
         ->include<Position>({2, 1})
         ->apply();
 
-    auto queryHealth = w.newQuery()
+    auto healthObjects = w.newQuery()
                            ->include<Health>()
                            ->apply()
-                           ->getKey();
+                           ->getIndex();
 
-    auto healthObjects = w.getIndex()
-                             ->getIndex(queryHealth.getId());
+    for (auto itr : *healthObjects)
+    {
+        auto health = w.loadEntity(itr)
+            ->get<Health>();
+
+        cout << health->level << " ";
+    }
 
     EXPECT_EQ(2, healthObjects->size());
 }

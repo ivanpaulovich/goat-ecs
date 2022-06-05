@@ -30,7 +30,7 @@ namespace goat
         Entities *m_entities;
         Keys *m_keys;
         Components *m_components;
-        Index *m_index;
+        Indexes *m_index;
         vector<TSystemUpdate *> m_systems;
     public:
         World(const unsigned int size)
@@ -38,7 +38,7 @@ namespace goat
             m_entities = new Entities(size);
             m_keys = new Keys();
             m_components = new Components();
-            m_index = new Index();
+            m_index = new Indexes();
         }
 
         ~World() {}
@@ -58,7 +58,7 @@ namespace goat
             return m_components;
         }
 
-        Index *getIndex()
+        Indexes *getIndexes()
         {
             return m_index;
         }

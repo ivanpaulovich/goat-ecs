@@ -4,7 +4,7 @@
 
 namespace goat
 {
-    class Index
+    class Indexes
     {
     private:
         std::map<unsigned int, std::set<unsigned int>> m_indexes;

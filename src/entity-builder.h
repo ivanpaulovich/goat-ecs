@@ -55,7 +55,7 @@ namespace goat
         T *get()
         {
             auto key = m_world->getKeys()->getKey<T>();
-            return m_world->getComponents()->getComponents<T>(key.getId())[m_id];
+            return &m_world->getComponents()->getComponents<T>(key.getId())[m_id];
         }
 
         void destroy()
