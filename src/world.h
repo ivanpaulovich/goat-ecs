@@ -11,7 +11,8 @@
 #include <memory>
 #include <set>
 #include "key.h"
-#include "type-info-ref.h"
+#include "equal-to.h"
+#include "hasher.h"
 #include "indexes.h"
 #include "entities.h"
 #include "keys.h"

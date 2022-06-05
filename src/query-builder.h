@@ -40,7 +40,12 @@ namespace goat
 
             for (unsigned int id = 0; id < m_world->getEntities()->getCount(); id++)
             {
-                m_world->getIndexes()->updateEntityIndex(id, m_world->getEntities()->getEntity(id)->getId());
+                auto key = m_world->getEntities()->getEntity(id);
+
+                if (key->getId() != -1)
+                {
+                    m_world->getIndexes()->updateEntityIndex(id, key->getId());
+                }
             }
 
             return this;

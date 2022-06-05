@@ -1,16 +1,8 @@
 #pragma once
 
-#include <array>
-#include <vector>
 #include <map>
-#include <iostream>
-#include <typeinfo>
-#include <unordered_map>
-#include <string>
-#include <functional>
-#include <memory>
-#include <set>
-#include "type-info-ref.h"
+#include "key.h"
+#include "equal-to.h"
 #include "key.h"
 
 namespace goat
@@ -18,13 +10,13 @@ namespace goat
     class Keys
     {
     private:
-        unordered_map<TypeInfoRef, Key, Hasher, EqualTo> m_keys;
+        unordered_map<reference_wrapper<const type_info>, Key, Hasher, EqualTo> m_keys;
 
     public:
         template <typename T>
         Key getKey()
         {
-            TypeInfoRef type = typeid(T);
+            reference_wrapper<const type_info> type = typeid(T);
             if (m_keys.find(type) != m_keys.end())
             {
                 return m_keys[type];
