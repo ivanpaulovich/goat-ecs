@@ -36,11 +36,11 @@ namespace goat
 
         QueryBuilder *apply()
         {
-            m_world->getIndex()->addQuery(m_key->getId());
+            m_world->getIndexes()->addQuery(m_key->getId());
 
             for (unsigned int id = 0; id < m_world->getEntities()->getCount(); id++)
             {
-                m_world->getIndex()->updateEntityIndex(id, m_world->getEntities()->getEntity(id)->getId());
+                m_world->getIndexes()->updateEntityIndex(id, m_world->getEntities()->getEntity(id)->getId());
             }
 
             return this;

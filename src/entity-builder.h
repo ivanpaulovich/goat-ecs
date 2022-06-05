@@ -60,12 +60,13 @@ namespace goat
 
         void destroy()
         {
-            m_world->getDestroyedEntities()->insert(m_id);
+
         }
 
         void apply()
         {
-            m_world->getIndex()->updateEntityIndex(m_id, m_world->getEntities()->getEntity(m_id)->getId());
+            auto signature = m_world->getEntities()->getEntity(m_id)->getId();
+            m_world->getIndexes()->updateEntityIndex(m_id, signature);
         }
 
         int getId()

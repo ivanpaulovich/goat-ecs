@@ -1,5 +1,5 @@
 #include <map>
-#include "index.h"
+#include "indexes.h"
 
 namespace goat
 {
