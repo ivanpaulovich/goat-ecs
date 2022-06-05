@@ -76,6 +76,9 @@
         "functional": "cpp",
         "iterator": "cpp",
         "utility": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "thread": "cpp",
+        "condition_variable": "cpp",
+        "queue": "cpp"
     }
 }
