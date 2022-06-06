@@ -2,10 +2,10 @@
 #include <typeinfo>
 #include <iostream>
 #include <set>
-#include <world.h>
-#include <world-manager.h>
-#include <entities.h>
-#include <components.h>
+#include <goat/world.h>
+#include <goat/world-manager.h>
+#include <goat/entities.h>
+#include <goat/components.h>
 #include "game-components.h"
 
 using namespace goat;
