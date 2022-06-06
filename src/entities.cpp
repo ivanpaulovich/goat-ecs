@@ -1,6 +1,6 @@
 #include <vector>
-#include "entities.h"
-#include "key.h"
+#include <goat/entities.h>
+#include <goat/key.h>
 
 namespace goat
 {

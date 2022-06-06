@@ -1,5 +1,5 @@
 #include <iostream>
-#include "world.h"
+#include <goat/world.h>
 
 namespace goat
 {
