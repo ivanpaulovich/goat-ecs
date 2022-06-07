@@ -26,4 +26,6 @@ install(TARGETS ${PROJECT_NAME}
   PUBLIC_HEADER DESTINATION include/${PROJECT_NAME}
 )
 
+enable_testing()
+
 add_subdirectory(test)

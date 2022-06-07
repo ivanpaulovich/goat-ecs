@@ -28,11 +28,6 @@ namespace goat
             m_id ^= value;
         }
 
-        void reset()
-        {
-            m_id = -1;
-        }
-
         bool hasComponent(const unsigned int value)
         {
             return m_id && value == 0;

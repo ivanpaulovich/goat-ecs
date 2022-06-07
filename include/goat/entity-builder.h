@@ -60,7 +60,7 @@ namespace goat
 
         void destroy()
         {
-            m_world->getEntities()->getEntity(m_id)->reset();
+            m_world->getEntities()->destroy(m_id);
         }
 
         void apply()

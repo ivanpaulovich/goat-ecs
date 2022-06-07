@@ -19,6 +19,8 @@ namespace goat
 
         Key *getEntity(const unsigned int id);
 
+        void destroy(unsigned int);
+
         unsigned int getCount();
 
         unsigned int getSize();

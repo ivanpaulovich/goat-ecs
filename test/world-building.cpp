@@ -7,6 +7,8 @@
 #include <goat/entities.h>
 #include <goat/components.h>
 #include "game-components.h"
+#include <stdexcept>
+#include "gmock/gmock.h"
 
 using namespace goat;
 
@@ -70,3 +72,4 @@ TEST(WorldTest, WorldBuilding)
 
     EXPECT_EQ(2, healthObjects->size());
 }
+
