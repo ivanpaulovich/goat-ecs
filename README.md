@@ -2,11 +2,18 @@
 
 Goat-ECS is an Entity-Component System with a friendly API to build objects with dynamic components.
 
-## Build
+## Compiling
 
 ```
 cmake .
 cmake --build .
+```
+
+## Debug
+
+```
+lldb test/test/goat-tests
+(lldb) b main
 ```
 
 ## Entities Building
@@ -51,7 +58,7 @@ for (auto id : *healthIds)
 
 ## Design Your Own Components
 
-```c
+```
 struct Position
 {
     int x;
