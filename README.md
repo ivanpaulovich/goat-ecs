@@ -2,6 +2,13 @@
 
 Goat-ECS is an Entity-Component System with a friendly API to build objects with dynamic components.
 
+## Build
+
+```
+cmake .
+cmake --build .
+```
+
 ## Entities Building
 
 ```c
