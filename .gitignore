@@ -13,3 +13,5 @@ build
 .vscode
 .cache
 lib
+*.cmake
+*.dylib
