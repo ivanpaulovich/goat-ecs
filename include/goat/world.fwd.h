@@ -1,6 +1,5 @@
 #pragma once
 
-namespace goat
-{
-    class World;
+namespace goat {
+class World;
 }

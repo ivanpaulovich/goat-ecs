@@ -1,10 +1,7 @@
-#include <iostream>
 #include <goat/world.h>
 
-namespace goat
-{
-    int main()
-    {
-        return 0;
-    }
-}
+#include <iostream>
+
+namespace goat {
+int main() { return 0; }
+}  // namespace goat
