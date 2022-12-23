@@ -5,8 +5,9 @@ Goat-ECS is an Entity-Component System with a friendly API to build objects with
 ## Compiling
 
 ```
-cmake .
-cmake --build .
+cmake -S . -B build
+cmake --build build -j 12
+GTEST_COLOR=1 ctest --test-dir build --output-on-failure -j12
 ```
 
 ## Debug

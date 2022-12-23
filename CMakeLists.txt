@@ -1,8 +1,10 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.21)
 project(goat)
 
-set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
+
+add_subdirectory(metal-cmake)  
+add_subdirectory(demo)
 
 # Create a shared library
 file(GLOB CPP_SOURCES src/*.cpp)
@@ -29,4 +31,5 @@ install(TARGETS ${PROJECT_NAME}
 
 enable_testing()
 
+# L
 add_subdirectory(test)
