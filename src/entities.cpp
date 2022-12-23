@@ -1,9 +1,9 @@
-//#include <goat/entities.h>
+#include <goat/entities.h>
 #include <goat/key.h>
 
-//#include <iostream>
+#include <iostream>
 #include <stdexcept>
-//#include <vector>
+#include <vector>
 
 using namespace std;
 
