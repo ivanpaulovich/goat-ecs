@@ -3,9 +3,6 @@ project(goat)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(metal-cmake)  
-add_subdirectory(demo)
-
 # Create a shared library
 file(GLOB CPP_SOURCES src/*.cpp)
 add_library(${PROJECT_NAME} SHARED ${CPP_SOURCES})
