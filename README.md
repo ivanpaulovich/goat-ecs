@@ -10,6 +10,12 @@ cmake --build build -j 12
 GTEST_COLOR=1 ctest --test-dir build --output-on-failure -j12
 ```
 
+## Vim
+
+```
+cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+```
+
 ## Debug
 
 ```
